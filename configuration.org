@@ -91,6 +91,9 @@
     (mouse-wheel-progressive-speed nil) ;; Disable progressive speed when scrolling
     (scroll-conservatively 10) ;; Smooth scrolling
 
+    ;; (ispell-program-name nil)
+    ;; (text-mode-ispell-word-completion nil)
+
     (tab-width 4)
     (auto-save-default nil) ;; Stop creating # auto save files
     :hook
@@ -236,9 +239,10 @@
              "* TODO %?\n%U\n%i")
             ("w" "Work")
             ("wt" "Work Todo" entry (file+headline "work.org" "Todos") "** TODO %?\n%U\n%i\n%a :work:")
-    	  ("l" "Log Entry" entry (file+olp+datetree "~/org/daybook.org") "* %? %T")
-  	  ("r" "Manual Cookbook" entry (file+headline "notes.org" "Recipes")
-  	   "* %^{Recipe title: }\n  :PROPERTIES:\n  :source-url:\n  :servings:\n  :prep-time:\n  :cook-time:\n  :ready-in:\n  :END:\n** Ingredients\n   %?\n** Directions\n\n")))
+    		  ("l" "Log Entry" entry (file+olp+datetree "~/org/daybook.org") "* %? %T")
+  		  ("r" "Manual Cookbook" entry (file+headline "notes.org" "Recipes")
+  		   "* %^{Recipe title: }\n  :PROPERTIES:\n  :source-url:\n  :servings:\n  :prep-time:\n  :cook-time:\n  :ready-in:\n  :END:\n** Ingredients\n   %?\n** Directions\n\n")
+  		  ("j" "Journal entry" entry (file+olp+datetree "notes.org" "Journal") "* %(format-time-string \"%H:%M\") \n %?")))
 
      (setq org-agenda-span 'day)
      (setq org-agenda-custom-commands
@@ -290,17 +294,17 @@
     (org-super-agenda-mode t))
     #+end_src
 ** org-journal
-#+begin_src emacs-lisp
-  (use-package org-journal
-    :init
-    ;; Change default prefix key; needs to be set before loading org-journal
-    (setq org-journal-prefix-key "C-c j ")
-    :config
-    (setq org-journal-dir "~/org/journal/"
-          org-journal-date-format "%Y-%m-%d %A"
-        	org-journal-file-type 'monthly
-          org-journal-file-header "%B"))
-#+end_src
+# #+begin_src emacs-lisp
+#   (use-package org-journal
+#     :init
+#     ;; Change default prefix key; needs to be set before loading org-journal
+#     (setq org-journal-prefix-key "C-c j ")
+#     :config
+#     (setq org-journal-dir "~/org/journal/"
+#           org-journal-date-format "%Y-%m-%d %A"
+#         	org-journal-file-type 'monthly
+#           org-journal-file-header "%B"))
+# #+end_src
 ** org-chef
 Org-chef is a plugin, which can convert recipes from website to org
 #+begin_src emacs-lisp
