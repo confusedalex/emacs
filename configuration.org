@@ -1,7 +1,11 @@
 #+Title: Emacs Configuration
 #+Author: confusedalex
+#+STARTUP: content
 
 * Table of Contents :TOC_4:
+:PROPERTIES:
+:VISIBILITY: all
+:END:
 - [[#use-package][Use Package]]
 - [[#evil-mode][Evil Mode]]
 - [[#good-defaults][Good Defaults]]
@@ -13,6 +17,7 @@
     - [[#zooming-inout][Zooming In/Out]]
   - [[#modeline][Modeline]]
   - [[#whichkey][Whichkey]]
+  - [[#dashboard][Dashboard]]
 - [[#org-mode][Org Mode]]
   - [[#org-evil][Org-Evil]]
   - [[#org-tempo][Org Tempo]]
@@ -173,6 +178,23 @@
       (use-package which-key
        :config
        (which-key-mode))
+#+end_src
+** Dashboard
+#+begin_src emacs-lisp
+  (use-package dashboard
+    :custom
+    (dashboard-startup-banner 'logo)
+    (dashboard-center-content t)
+    (dashboard-vertically-center-content t)
+    ;; Nerd icons
+    (dashboard-icon-type 'nerd-icons)
+    (dashboard-set-heading-icons t)
+    (dashboard-set-file-icons t)
+    ;; Show org agenda
+    (add-to-list 'dashboard-items '(agenda) t)
+    (dashboard-week-agenda t)
+    :config
+    (dashboard-setup-startup-hook))
 #+end_src
 * Org Mode
 #+begin_src emacs-lisp
