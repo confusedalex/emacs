@@ -121,7 +121,7 @@
 
     (spc
       "f" '(:ignore t :wk "Find")
-      "f c" '((lambda () (interactive) (find-file "~/.emacs.d/configuration.org")) :wk "Edit emacs config")
+      "f c" '((lambda () (interactive) (find-file "~/.config/emacs/configuration.org")) :wk "Edit emacs config")
       "f r" '(consult-recent-file :wk "Recent files")
       "f f" '(consult-fd :wk "Fd search for files")
       "f g" '(consult-ripgrep :wk "Ripgrep search in files")
@@ -130,8 +130,8 @@
 
     (spc
       "o" '(:ignore t :wk "Org")
-      "o n" '((lambda () (interactive) (find-file "~/org/notes.org")) :wk "Open Notes")
-      "o i" '((lambda () (interactive) (find-file "~/org/inbox.org")) :wk "Open Inbox")
+      "o n" '((lambda () (interactive) (find-file "~/persist/org/notes.org")) :wk "Open Notes")
+      "o i" '((lambda () (interactive) (find-file "~/persist/org/inbox.org")) :wk "Open Inbox")
       "o a" '(org-agenda :wk "Opens org agenda")
       "o c" '(org-capture :wk "Org Capture"))
     )
@@ -201,7 +201,7 @@
 #+end_src
 * Org Mode
 #+begin_src emacs-lisp
-  (setq org-directory "~/org/") ; Non-absolute paths for agenda and
+  (setq org-directory "~/persist/org/") ; Non-absolute paths for agenda and
   (setq org-agenda-files '("inbox.org" "work.org" "daybook.org" "notes.org"))
   (setq org-ellipsis "⤵")
   (setq org-tag-alist
