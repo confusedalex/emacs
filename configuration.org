@@ -109,32 +109,33 @@
 #+end_src
 * General Keybindings
 #+begin_src emacs-lisp
-    (use-package general
-    :ensure t
-    :config
-    (general-evil-setup)
-    (general-create-definer spc
-      :states '(normal insert visual motion emacs)
-      :keymaps 'override
-      :prefix "SPC"
-      :global-prefix "C-SPC")
+  (use-package general
+  :ensure t
+  :config
+  (general-evil-setup)
+  (general-create-definer spc
+    :states '(normal insert visual motion emacs)
+    :keymaps 'override
+    :prefix "SPC"
+    :global-prefix "C-SPC")
 
-    (spc
-      "f" '(:ignore t :wk "Find")
-      "f c" '((lambda () (interactive) (find-file "~/.config/emacs/configuration.org")) :wk "Edit emacs config")
-      "f r" '(consult-recent-file :wk "Recent files")
-      "f f" '(consult-fd :wk "Fd search for files")
-      "f g" '(consult-ripgrep :wk "Ripgrep search in files")
-      "f l" '(consult-line :wk "Find line")
-      "f i" '(consult-imenu :wk "Imenu buffer locations"))
+  (spc
+    "f" '(:ignore t :wk "Find")
+    "f c" '((lambda () (interactive) (find-file "~/.config/emacs/configuration.org")) :wk "Edit emacs config")
+    "f r" '(consult-recent-file :wk "Recent files")
+    "f f" '(consult-fd :wk "Fd search for files")
+    "f g" '(consult-ripgrep :wk "Ripgrep search in files")
+    "f l" '(consult-line :wk "Find line")
+    "f i" '(consult-imenu :wk "Imenu buffer locations"))
 
-    (spc
-      "o" '(:ignore t :wk "Org")
-      "o n" '((lambda () (interactive) (find-file "~/persist/org/notes.org")) :wk "Open Notes")
-      "o i" '((lambda () (interactive) (find-file "~/persist/org/inbox.org")) :wk "Open Inbox")
-      "o a" '(org-agenda :wk "Opens org agenda")
-      "o c" '(org-capture :wk "Org Capture"))
-    )
+  (spc
+    "o" '(:ignore t :wk "Org")
+    "o n" '((lambda () (interactive) (find-file "~/persist/org/notes.org")) :wk "Open Notes")
+    "o i" '((lambda () (interactive) (find-file "~/persist/org/inbox.org")) :wk "Open Inbox")
+    "o w" '((lambda () (interactive) (find-file "~/persist/org/work.org")) :wk "Open Inbox")
+    "o a" '(org-agenda :wk "Opens org agenda")
+    "o c" '(org-capture :wk "Org Capture"))
+  )
 #+end_src
 
 * Appearance
@@ -242,7 +243,16 @@
     		  ("l" "Log Entry" entry (file+olp+datetree "~/org/daybook.org") "* %? %T")
   		  ("r" "Manual Cookbook" entry (file+headline "notes.org" "Recipes")
   		   "* %^{Recipe title: }\n  :PROPERTIES:\n  :source-url:\n  :servings:\n  :prep-time:\n  :cook-time:\n  :ready-in:\n  :END:\n** Ingredients\n   %?\n** Directions\n\n")
-  		  ("j" "Journal entry" entry (file+olp+datetree "notes.org" "Journal") "* %(format-time-string \"%H:%M\") \n %?")))
+  		  ("j" "Journal entry" entry (file+olp+datetree "notes.org" "Journal") "* %(format-time-string \"%H:%M\") \n %?")
+  		  ("b" "Book" entry (file+headline "notes.org" "Books")
+            "** TODO %^{Title}
+                  :PROPERTIES:
+                  :name:     %\\1
+                  :author:   %^{Author}
+                  :pages:    %^{Pages}
+                  :rating:   %^{Rating}
+                  :END:\n\n%?"
+         :empty-lines 1)))
 
      (setq org-agenda-span 'day)
      (setq org-agenda-custom-commands
