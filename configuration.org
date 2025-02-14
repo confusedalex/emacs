@@ -209,24 +209,23 @@
         '(
           ;; locale
           (:startgroup)
-       	("Areas")
-       	(:grouptags)
           ("home" . ?h)
           ("work" . ?w)
           ("school" . ?s)
-          (:endgroup)))
+          (:endgroup)
+  		("project")
+  		("tech")))
 
   (use-package org
     :hook
     ((org-mode . org-indent-mode)
-     (org-mode . visual-line-mode)  ; wrap lines at word breaks
-     (org-mode . flyspell-mode))    ; spell checking!
+     (org-mode . visual-line-mode))  ; wrap lines at word breaks
     :config
     ;; Make org-open-at-point follow file links in the same window
     (setf (cdr (assoc 'file org-link-frame-setup)) 'find-file)
     (setq-default org-todo-keywords
-    		'((sequence "TODO(t)" "WAIT(w@/!)" "STARTED(s)" "|" "DONE(d!)" "CANCELED(c@)")))
-    
+    		'((sequence "TODO(t)" "WAIT(w@/!)" "STARTED(s)" "|" "DONE(d)" "CANCELED(c@)")))
+    (setq org-log-done 'time)   
     ;; Clocking
     (setq org-clock-persist 'history)
     (org-clock-persistence-insinuate)
@@ -254,14 +253,15 @@
                   :END:\n\n%?"
          :empty-lines 1)))
 
-     (setq org-agenda-span 'day)
-     (setq org-agenda-custom-commands
-           '(("n" "Agenda and All Todos"
-              ((agenda)
-               (todo)))
-             ("w" "Work" agenda ""
-              ((org-agenda-files '("work.org"))))))
-  )
+   (setq org-agenda-span 'day)
+   (setq org-agenda-custom-commands
+         '(("n" "Agenda and All Todos"
+            ((agenda)
+             (todo)))
+           ("w" "Work" todo ""
+            ((org-agenda-files '("work.org"))
+  		   ))))
+   ) 
 #+end_src
 ** Org-Evil
 #+begin_src emacs-lisp
@@ -290,18 +290,40 @@
 ** Org Super Agenda
 #+begin_src emacs-lisp
   (use-package org-super-agenda
-    :ensure t
     :after org-agenda
     :custom  (org-super-agenda-groups
   	    '(
   	      (:name "Overdue" :deadline past :order 0)
-  	      (:name "Today" :time-grid t :todo "TODAY")  
+  	      (:name "Today" :time-grid t :order 3)  
   	      (:name "Personal" :tag ("home" "personal"))
   	      (:name "Due Soon" :deadline future :order 4)
-                (:name "Todo" :not (:habit t) :order 5)
+            (:name "Todo" :order 5)
+  		  (:name "Tect" :tag "tech" :order 6) 
+  		  (:name "Projects" :tag "project" :order 7)
   	      (:name "Waiting" :todo ("WAITING" "HOLD") :order 9)))
     :config
+    (setq org-super-agenda-header-map nil)
     (org-super-agenda-mode t))
+  (setq org-agenda-custom-commands
+  	  '(("o" "Overview"
+  	         ((agenda "" ((org-agenda-span 'day)
+  						  (org-super-agenda-groups
+  						   '((:name "Today"
+  									:time-grid t
+  									:date today
+  									:todo "TODAY"
+  									:scheduled today
+  									:order 1)))))
+  			  (alltodo "" ((org-agenda-overriding-header "")
+  						   (org-super-agenda-groups
+  							'((:name "Important"    :tag "Important" :priority "A" :order 6)
+  							  (:name "Due Today"    :deadline today  :order 2)
+  							  (:name "Due Soon"     :deadline future :order 8)
+  							  (:name "Overdue"      :deadline past   :face error :order 7)
+  							  (:name "To read"      :tag "read"      :order 30)
+  							  (:name "Waiting"      :todo "WAIT"     :order 20)
+  							  (:name "Work"         :tag "work"      :order 32)
+  							  (:name "Personal"     :tag "home"  :order 32)))))))))
     #+end_src
 ** org-journal
 # #+begin_src emacs-lisp
@@ -319,7 +341,6 @@
 Org-chef is a plugin, which can convert recipes from website to org
 #+begin_src emacs-lisp
   (use-package org-chef)
-
 #+end_src
 ** org-toc
 #+begin_src emacs-lisp
