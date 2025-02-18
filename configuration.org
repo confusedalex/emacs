@@ -49,9 +49,8 @@
   (use-package evil
     :init
     (evil-mode)
-    :config
-    (evil-set-initial-state 'eat-mode 'emacs)
     :custom
+    (evil-want-integration t)
     (evil-want-keybinding nil)
     (evil-want-C-u-scroll t)
     (evil-undo-system 'undo-redo)
