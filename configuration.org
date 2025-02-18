@@ -89,6 +89,8 @@
     (mouse-wheel-progressive-speed nil) ;; Disable progressive speed when scrolling
     (scroll-conservatively 10) ;; Smooth scrolling
 
+    (setq backup-directory-alist `(("." . "~/.saves"))) ;; don't clutter my file tree
+
     (ispell-program-name nil)
     (text-mode-ispell-word-completion nil)
 
