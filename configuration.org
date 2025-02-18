@@ -89,8 +89,8 @@
     (mouse-wheel-progressive-speed nil) ;; Disable progressive speed when scrolling
     (scroll-conservatively 10) ;; Smooth scrolling
 
-    ;; (ispell-program-name nil)
-    ;; (text-mode-ispell-word-completion nil)
+    (ispell-program-name nil)
+    (text-mode-ispell-word-completion nil)
 
     (tab-width 4)
     (auto-save-default nil) ;; Stop creating # auto save files
