@@ -47,7 +47,6 @@
 * Evil Mode
 #+begin_src emacs-lisp
   (use-package evil
-    :ensure t
     :init
     (evil-mode)
     :config
@@ -66,7 +65,6 @@
     )
   (use-package evil-collection
     :after evil
-    :ensure t
     :config
     (evil-collection-init))
 #+end_src
