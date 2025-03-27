@@ -441,27 +441,108 @@ Diff-HL provides marking for unstaged, uncommited, changed, added, removed lines
 #+end_src
 ** Keybinds
 #+begin_src emacs-lisp
-(defvar-keymap prefix-quatsch-map
-  :doc "mein prefix quatsch"
-  "a" #'org-agenda)
-
 (defvar-keymap prefix-find-files-map
   :doc "Find Files"
+  "/" 'consult-line
+  "C" 'consult-git-grep
+  "c" #'(lambda() (interactive)(find-file "~/.emacs.d/config.org"))
   "f" 'consult-find
   "g" 'consult-ripgrep
-  "C" 'consult-git-grep
   "h" 'consult-info
-  "c" #'(lambda() (interactive)(find-file "~/.emacs.d/config.org"))
-  "/" 'consult-line)
+) 
 
+(defvar-keymap prefix-org-map
+  :doc "Org mode keys"
+  "a" 'org-agenda
+  "c" 'org-capture
+  "e" 'org-export-dispatch
+
+  ;; Files
+  "b" '(lambda() (interactive)(find-file "~/persist/org/books.org"))
+  "i" '(lambda() (interactive)(find-file "~/persist/org/inbox.org"))
+  "j" '(lambda() (interactive)(find-file "~/persist/org/journal.org"))
+  "n" '(lambda() (interactive)(find-file "~/persist/org/notes.org"))
+  "w" '(lambda() (interactive)(find-file "~/persist/org/work.org"))
+  )
+
+(defvar-keymap prefix-mode-map
+  ;; Org tables
+  "b d c" 'org-table-delete-column
+  "b d r" 'org-table-delete-row
+
+  ;; Org dates
+  "d d" 'org-deadline
+  "d s" 'org-schedule
+  "d t" 'org-time-stamp
+  "d T" 'org-time-stamp-inactive
+
+  ;; Org subtree
+  "s n" 'org-narrow-to-subtree
+  "s N" 'widen
+  "s r" 'org-refile
+  "s S" 'org-sort
+  )
+
+(defvar-keymap prefix-magit-map
+  :doc "Magit keybindings for Git integration"
+  "g" 'magit-status      ;; Open Magit status
+  "l" 'magit-log-current ;; Show current log
+  "d" 'magit-diff-buffer-file ;; Show diff for the current file
+  "D" 'diff-hl-show-hunk ;; Show diff for a hunk
+  "b" 'vc-annotate       ;; Annotate buffer with version control info
+)
+
+(defvar-keymap prefix-dired-map
+  :doc "Dired commands for file management"
+  "d" 'dired
+  "j" 'dired-jump
+  "f" 'find-file
+  )
+
+(defvar-keymap prefix-project-map
+  :doc "Project management keybindings"
+  "b" 'consult-project-buffer ;; Consult project buffer
+  "p" 'project-switch-project ;; Switch project
+  "f" 'project-find-file ;; Find file in project
+  "g" 'project-find-regexp ;; Find regexp in project
+  "k" 'project-kill-buffers ;; Kill project buffers
+  "D" 'project-dired ;; Dired for project
+)
+
+(defvar-keymap prefix-buffer-map
+  :doc "Buffer management keybindings"
+  "b" 'ibuffer ;; Open Ibuffer
+  "d" 'kill-current-buffer ;; Kill current buffer
+  "i" 'consult-buffer ;; Open consult buffer list
+  "k" 'kill-current-buffer ;; Kill current buffer
+  "l" 'consult-buffer ;; Consult buffer
+  "s" 'save-buffer ;; Save buffer
+  "x" 'kill-current-buffer ;; Kill current buffer
+  )
+
+(defvar-keymap prefix-neotree-map
+  :doc "NeoTree command for file exploration"
+  "e" 'neotree-toggle
+)
+
+(defvar-keymap prefix-compute-map
+  :doc "Compute"
+  "r" 'elisp-eval-region-or-buffer ;; Reload config
+  )
 
 (defvar-keymap spc-prefix-map
   :doc "My prefix key map."
+  "b" prefix-buffer-map
+  "c" prefix-compute-map
+  "e" prefix-neotree-map
   "f" prefix-find-files-map
-  "n" prefix-quatsch-map)
+  "g" prefix-magit-map
+  "m" prefix-mode-map
+  "o" prefix-org-map)
+  "p" prefix-project-map
+  "x" prefix-dired-map
 
 (which-key-add-keymap-based-replacements spc-prefix-map
-  "n" `("eins zwei drei" . ,prefix-quatsch-map)
   "f" `("find files" . ,prefix-find-files-map))
 #+end_src
 ** Evil Mode
@@ -486,92 +567,16 @@ Diff-HL provides marking for unstaged, uncommited, changed, added, removed lines
   (setq evil-leader/in-all-states t)  ;; Make the leader key available in all states.
   (setq evil-want-fine-undo t)        ;; Evil uses finer grain undoing steps
 
-  ;; Define the leader key as Space
-  (evil-set-leader 'normal (kbd "SPC"))
-  (evil-set-leader 'visual (kbd "SPC"))
-
-  ;; Keybindings for searching and finding files.
-  (evil-define-key 'normal 'global (kbd "<leader> f f") 'consult-find)
-  (evil-define-key 'normal 'global (kbd "<leader> f g") 'consult-ripgrep)
-  (evil-define-key 'normal 'global (kbd "<leader> f G") 'consult-git-grep)
-  (evil-define-key 'normal 'global (kbd "<leader> f h") 'consult-info)
-  (evil-define-key 'normal 'global (kbd "<leader> f c") '(lambda() (interactive)(find-file "~/.emacs.d/config.org")))
-  (evil-define-key 'normal 'global (kbd "<leader> /") 'consult-line)
-
+  (evil-define-key '(normal motion visual) 'global
+    (kbd "RET") nil ; unset RET to use with org-return-follows-link
+    (kbd "SPC") spc-prefix-map
+    )
+  
   ;; Flymake navigation
   (evil-define-key 'normal 'global (kbd "<leader> x x") 'consult-flymake);; Gives you something like `trouble.nvim'
   (evil-define-key 'normal 'global (kbd "] d") 'flymake-goto-next-error) ;; Go to next Flymake error
   (evil-define-key 'normal 'global (kbd "[ d") 'flymake-goto-prev-error) ;; Go to previous Flymake error
 
-  ;; Dired commands for file management
-  (evil-define-key 'normal 'global (kbd "<leader> x d") 'dired)
-  (evil-define-key 'normal 'global (kbd "<leader> x j") 'dired-jump)
-  (evil-define-key 'normal 'global (kbd "<leader> x f") 'find-file)
-
-  ;; Diff-HL navigation for version control
-  (evil-define-key 'normal 'global (kbd "] c") 'diff-hl-next-hunk) ;; Next diff hunk
-  (evil-define-key 'normal 'global (kbd "[ c") 'diff-hl-previous-hunk) ;; Previous diff hunk
-
-  ;; NeoTree command for file exploration
-  (evil-define-key 'normal 'global (kbd "<leader> e e") 'neotree-toggle)
-
-  ;; Magit keybindings for Git integration
-  (evil-define-key 'normal 'global (kbd "<leader> g g") 'magit-status)      ;; Open Magit status
-  (evil-define-key 'normal 'global (kbd "<leader> g l") 'magit-log-current) ;; Show current log
-  (evil-define-key 'normal 'global (kbd "<leader> g d") 'magit-diff-buffer-file) ;; Show diff for the current file
-  (evil-define-key 'normal 'global (kbd "<leader> g D") 'diff-hl-show-hunk) ;; Show diff for a hunk
-  (evil-define-key 'normal 'global (kbd "<leader> g b") 'vc-annotate)       ;; Annotate buffer with version control info
-
-  ;; Buffer management keybindings
-  (evil-define-key 'normal 'global (kbd "] b") 'switch-to-next-buffer) ;; Switch to next buffer
-  (evil-define-key 'normal 'global (kbd "[ b") 'switch-to-prev-buffer) ;; Switch to previous buffer
-  (evil-define-key 'normal 'global (kbd "<leader> b i") 'consult-buffer) ;; Open consult buffer list
-  (evil-define-key 'normal 'global (kbd "<leader> b b") 'ibuffer) ;; Open Ibuffer
-  (evil-define-key 'normal 'global (kbd "<leader> b d") 'kill-current-buffer) ;; Kill current buffer
-  (evil-define-key 'normal 'global (kbd "<leader> b k") 'kill-current-buffer) ;; Kill current buffer
-  (evil-define-key 'normal 'global (kbd "<leader> b x") 'kill-current-buffer) ;; Kill current buffer
-  (evil-define-key 'normal 'global (kbd "<leader> b s") 'save-buffer) ;; Save buffer
-  (evil-define-key 'normal 'global (kbd "<leader> b l") 'consult-buffer) ;; Consult buffer
-  (evil-define-key 'normal 'global (kbd "<leader>SPC") 'consult-buffer) ;; Consult buffer
-
-  ;; Compute
-  (evil-define-key 'normal 'global (kbd "<leader> c r") 'elisp-eval-region-or-buffer) ;; Reload config
-
-  ;; Project management keybindings
-  (evil-define-key 'normal 'global (kbd "<leader> p b") 'consult-project-buffer) ;; Consult project buffer
-  (evil-define-key 'normal 'global (kbd "<leader> p p") 'project-switch-project) ;; Switch project
-  (evil-define-key 'normal 'global (kbd "<leader> p f") 'project-find-file) ;; Find file in project
-  (evil-define-key 'normal 'global (kbd "<leader> p g") 'project-find-regexp) ;; Find regexp in project
-  (evil-define-key 'normal 'global (kbd "<leader> p k") 'project-kill-buffers) ;; Kill project buffers
-  (evil-define-key 'normal 'global (kbd "<leader> p D") 'project-dired) ;; Dired for project
-
-  (evil-define-key 'normal 'global (kbd "<leader> o n") '(lambda() (interactive)(find-file "~/persist/org/notes.org")))
-  (evil-define-key 'normal 'global (kbd "<leader> o j") '(lambda() (interactive)(find-file "~/persist/org/journal.org")))
-  (evil-define-key 'normal 'global (kbd "<leader> o w") '(lambda() (interactive)(find-file "~/persist/org/work.org")))
-  (evil-define-key 'normal 'global (kbd "<leader> o b") '(lambda() (interactive)(find-file "~/persist/org/books.org")))
-  (evil-define-key 'normal 'global (kbd "<leader> o i") '(lambda() (interactive)(find-file "~/persist/org/inbox.org")))
-
-  ;; Org mode things
-  (evil-define-key 'normal 'global (kbd "<leader> o a") 'org-agenda)
-  (evil-define-key 'normal 'global (kbd "<leader> o c") 'org-capture)
-  (evil-define-key 'normal 'global (kbd "<leader> m e") 'org-export-dispatch)
-
-  ;; Org tables
-  (evil-define-key 'normal 'global (kbd "<leader> m b d c") 'org-table-delete-column)
-  (evil-define-key 'normal 'global (kbd "<leader> m b d r") 'org-table-delete-row)
-
-  ;; Org dates
-  (evil-define-key 'normal 'global (kbd "<leader> m d d") 'org-deadline)
-  (evil-define-key 'normal 'global (kbd "<leader> m d s") 'org-schedule)
-  (evil-define-key 'normal 'global (kbd "<leader> m d t") 'org-time-stamp)
-  (evil-define-key 'normal 'global (kbd "<leader> m d T") 'org-time-stamp-inactive)
-
-  ;; Org subtree
-  (evil-define-key 'normal 'global (kbd "<leader> m s n") 'org-narrow-to-subtree)
-  (evil-define-key 'normal 'global (kbd "<leader> m s N") 'widen)
-  (evil-define-key 'normal 'global (kbd "<leader> m s r") 'org-refile)
-  (evil-define-key 'normal 'global (kbd "<leader> m s S") 'org-sort)
-  
   ;; Yank from kill ring
   (evil-define-key 'normal 'global (kbd "P") 'consult-yank-from-kill-ring)
   (evil-define-key 'normal 'global (kbd "<leader> P") 'consult-yank-from-kill-ring)
@@ -604,34 +609,18 @@ Diff-HL provides marking for unstaged, uncommited, changed, added, removed lines
     (kbd "gI") 'lsp-find-implementation               ;; Find implementation
     (kbd "<leader> l f") 'lsp-format-buffer)          ;; Format buffer via lsp
 
-
-  (defun ek/lsp-describe-and-jump ()
-  	"Show hover documentation and jump to *lsp-help* buffer."
-  (interactive)
-  (lsp-describe-thing-at-point)
-  (let ((help-buffer "*lsp-help*"))
-     (when (get-buffer help-buffer)
-  	(switch-to-buffer-other-window help-buffer))))
-  ;; Open hover documentation
-  (evil-define-key 'normal 'global (kbd "K") 'ek/lsp-describe-and-jump)
-  ;; Yeah, on terminals, Emacs doesn't support (YET), the use of floating windows,
-  ;; thus, this will open a small buffer bellow your window.
-  ;; This floating frames are called "child frames" and some recent effort is being put
-  ;; into having a translation of those marvelous GUI stuff to terminal. Let's hope
-  ;; we add this to Emacs Kick soom :)
-
   ;; Commenting functionality for single and multiple lines
   (evil-define-key 'normal 'global (kbd "gcc")
-    (lambda ()
-      (interactive)
-      (if (not (use-region-p))
-          (comment-or-uncomment-region (line-beginning-position) (line-end-position)))))
+  (lambda ()
+  (interactive)
+  (if (not (use-region-p))
+  (comment-or-uncomment-region (line-beginning-position) (line-end-position)))))
 
   (evil-define-key 'visual 'global (kbd "gc")
-    (lambda ()
-      (interactive)
-      (if (use-region-p)
-          (comment-or-uncomment-region (region-beginning) (region-end)))))
+  (lambda ()
+  (interactive)
+  (if (use-region-p)
+  (comment-or-uncomment-region (region-beginning) (region-end)))))
 
   ;; Enable evil mode
   (evil-mode 1))
