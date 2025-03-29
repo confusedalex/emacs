@@ -885,7 +885,17 @@ Enable nix mode for all *.nix files
    )
   (org-log-done 'time) ; Add timestamp when a task is closed
   
-  (org-hide-leading-stars t))
+  (org-hide-leading-stars t)
+  (org-refile-targets
+   '((nil :maxlevel . 3)
+     (org-agenda-files :maxlevel . 3)) ;; add all agenda files as refile targets
+   ;; Without this, completers like ivy/helm are only given the first level of
+   ;; each outline candidates. i.e. all the candidates under the "Tasks" heading
+   ;; are just "Tasks/". This is unhelpful. We want the full path to each refile
+   ;; target! e.g. FILE/Tasks/heading/subheading
+   org-refile-use-outline-path 'file
+   org-outline-path-complete-in-steps nil)
+  )
 #+end_src
 *** Capture Templates
 #+begin_src emacs-lisp
