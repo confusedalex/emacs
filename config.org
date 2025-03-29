@@ -872,6 +872,8 @@ Enable nix mode for all *.nix files
   (org-directory "~/persist/org/")
   (org-agenda-files '("inbox.org" "work.org" "daybook.org" "notes.org"))
   (org-ellipsis "⤵")
+
+  (global-hi-lock-mode 1)
   (org-todo-keywords
    '((sequence
       "TODO(t)"  ; A task that needs doing & is ready to do
