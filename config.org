@@ -883,6 +883,7 @@ Enable nix mode for all *.nix files
       "DONE(d)"  ; Task successfully completed
       "KILL(k)")) ; Task was cancelled, aborted, or is no longer applicable
    )
+  (org-log-done 'time) ; Add timestamp when a task is closed
   
   (org-hide-leading-stars t))
 #+end_src
