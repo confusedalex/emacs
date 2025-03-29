@@ -540,9 +540,10 @@ Diff-HL provides marking for unstaged, uncommited, changed, added, removed lines
   "f" prefix-find-files-map
   "g" prefix-magit-map
   "m" prefix-mode-map
-  "o" prefix-org-map)
+  "o" prefix-org-map
   "p" prefix-project-map
   "x" prefix-dired-map
+  )
 
 (which-key-add-keymap-based-replacements spc-prefix-map
   "f" `("find files" . ,prefix-find-files-map))
