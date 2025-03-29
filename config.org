@@ -1,0 +1,1056 @@
+#+TITLE: config
+#+AUTHOR: confusedalex
+#+STARTUP: overview
+
+* Table of Contents :toc:
+- [[#use-package][Use-Package]]
+- [[#some-defaults][Some Defaults]]
+- [[#theme][Theme]]
+- [[#editor][Editor]]
+  - [[#format-all][format-all]]
+  - [[#git][Git]]
+  - [[#keybinds][Keybinds]]
+  - [[#evil-mode][Evil Mode]]
+  - [[#undo-tree][Undo tree]]
+  - [[#doom-modeline][doom-modeline]]
+  - [[#neotree][neotree]]
+  - [[#which-key][Which Key]]
+  - [[#rainbow-delimitiers][Rainbow Delimitiers]]
+  - [[#nerd-icons][Nerd Icons]]
+- [[#modes][Modes]]
+  - [[#markdown-mode][Markdown Mode]]
+  - [[#lsp-mode][lsp-mode]]
+  - [[#nix-ts-mode][nix-ts-mode]]
+  - [[#org-mode][Org Mode]]
+
+* Use-Package
+#+begin_src emacs-lisp
+(require 'package)
+(package-initialize)
+
+(require 'use-package-ensure) ;; Load use-package-always-ensure
+(setq use-package-always-ensure t) ;; Always ensures that a package is installed
+(setq package-archives '(("melpa" . "https://melpa.org/packages/") ;; Sets default package repositories
+						 ("org" . "https://orgmode.org/elpa/")
+                         ("elpa" . "https://elpa.gnu.org/packages/")))
+#+end_src
+* Some Defaults
+#+begin_src emacs-lisp
+(setq gc-cons-threshold #x40000000)
+
+;; Set the maximum output size for reading process output, allowing for larger data transfers.
+(setq read-process-output-max (* 1024 1024 4))
+
+;; Define a global customizable variable `ek-use-nerd-fonts' to control the use of
+;; Nerd Fonts symbols throughout the configuration. This boolean variable allows
+;; users to easily enable or disable the use of symbols from Nerd Fonts, providing
+;; flexibility in appearance settings. By setting it to `t', we enable Nerd Fonts
+;; symbols; setting it to `nil' would disable them.
+(defcustom ek-use-nerd-fonts t
+  "Configuration for using Nerd Fonts Symbols."
+  :type 'boolean
+  :group 'appearance)
+
+
+;;; EMACS
+;;  This is biggest one. Keep going, plugins (oops, I mean packages) will be shorter :)
+(use-package emacs
+  :custom                                         ;; Set custom variables to configure Emacs behavior.
+  (column-number-mode t)                          ;; Display the column number in the mode line.
+  (auto-save-default nil)                         ;; Disable automatic saving of buffers.
+  (create-lockfiles nil)                          ;; Prevent the creation of lock files when editing.
+  (delete-by-moving-to-trash t)                   ;; Move deleted files to the trash instead of permanently deleting them.
+  (delete-selection-mode 1)                       ;; Enable replacing selected text with typed text.
+  (display-line-numbers-type 'relative)           ;; Use relative line numbering in programming modes.
+  (global-auto-revert-non-file-buffers t)         ;; Automatically refresh non-file buffers.
+  (history-length 25)                             ;; Set the length of the command history.
+  (inhibit-startup-message t)                     ;; Disable the startup message when Emacs launches.
+  (initial-scratch-message "")                    ;; Clear the initial message in the *scratch* buffer.
+  (ispell-dictionary "en_US")                     ;; Set the default dictionary for spell checking.
+  (make-backup-files nil)                         ;; Disable creation of backup files.
+  (pixel-scroll-precision-mode t)                 ;; Enable precise pixel scrolling.
+  (pixel-scroll-precision-use-momentum nil)       ;; Disable momentum scrolling for pixel precision.
+  (ring-bell-function 'ignore)                    ;; Disable the audible bell.
+  (split-width-threshold 300)                     ;; Prevent automatic window splitting if the window width exceeds 300 pixels.
+  (switch-to-buffer-obey-display-actions t)       ;; Make buffer switching respect display actions.
+  (tab-always-indent 'complete)                   ;; Make the TAB key complete text instead of just indenting.
+  (tab-width 4)                                   ;; Set the tab width to 4 spaces.
+  (treesit-font-lock-level 4)                     ;; Use advanced font locking for Treesit mode.
+  (truncate-lines t)                              ;; Enable line truncation to avoid wrapping long lines.
+  (use-dialog-box nil)                            ;; Disable dialog boxes in favor of minibuffer prompts.
+  (use-short-answers t)                           ;; Use short answers in prompts for quicker responses (y instead of yes)
+  (warning-minimum-level :emergency)              ;; Set the minimum level of warnings to display.
+  (blink-cursor-mode nil)                         ;; Don't blink cursor
+
+  (mouse-wheel-progressive-speed nil)             ;; Disable progressive speed when scrolling
+  (scroll-conservatively 10)                      ;; Smooth scrolling
+
+  (display-line-numbers-mode)                     ;; display line numbers
+
+  :bind
+  ("C-+" . text-scale-increase)
+  ("C--" . text-scale-decrease)
+  ("C-_" . text-scale-decrease)
+  ("<C-wheel-up>" . text-scale-increase)
+  ("<C-wheel-down>" . text-scale-decrease)
+
+  :config
+  (set-face-attribute 'default nil :family "JetBrainsMono Nerd Font"  :height 130)
+
+  ;; Save manual customizations to a separate file instead of cluttering `init.el'.
+  ;; You can M-x customize, M-x customize-group, or M-x customize-themes, etc.
+  ;; The saves you do manually using the Emacs interface would overwrite this file.
+  ;; The following makes sure those customizations are in a separate file.
+  (setq custom-file (locate-user-emacs-file "custom-vars.el")) ;; Specify the custom file path.
+  (load custom-file 'noerror 'nomessage)                       ;; Load the custom file quietly, ignoring errors.
+
+  :init                        ;; Initialization settings that apply before the package is loaded.
+  (tool-bar-mode -1)           ;; Disable the tool bar for a cleaner interface.
+  (menu-bar-mode -1)           ;; Disable the menu bar for a more streamlined look.
+
+  (when scroll-bar-mode
+    (scroll-bar-mode -1))      ;; Disable the scroll bar if it is active.
+
+  (global-hl-line-mode 1)      ;; Enable highlight of the current line
+  (global-auto-revert-mode 1)  ;; Enable global auto-revert mode to keep buffers up to date with their corresponding files.
+  (indent-tabs-mode -1)        ;; Disable the use of tabs for indentation (use spaces instead).
+  (recentf-mode 1)             ;; Enable tracking of recently opened files.
+  (savehist-mode 1)            ;; Enable saving of command history.
+  (save-place-mode 1)          ;; Enable saving the place in files for easier return.
+  (winner-mode 1)              ;; Enable winner mode to easily undo window configuration changes.
+  (xterm-mouse-mode 1)         ;; Enable mouse support in terminal mode.
+  (file-name-shadow-mode 1)    ;; Enable shadowing of filenames for clarity.
+
+  ;; Set the default coding system for files to UTF-8.
+  (modify-coding-system-alist 'file "" 'utf-8))
+
+
+
+;;; WINDOW
+;; This section configures window management in Emacs, enhancing the way buffers
+;; are displayed for a more efficient workflow. The `window' use-package helps
+;; streamline how various buffers are shown, especially those related to help,
+;; diagnostics, and completion.
+;;
+;; Note: I have left some commented-out code below that may facilitate your
+;; Emacs journey later on. These configurations can be useful for displaying
+;; other types of buffers in side windows, allowing for a more organized workspace.
+(use-package window
+  :ensure nil       ;; This is built-in, no need to fetch it.
+  :custom
+  (display-buffer-alist
+   '(
+	 ;; ("\\*.*e?shell\\*"
+     ;;  (display-buffer-in-side-window)
+     ;;  (window-height . 0.25)
+     ;;  (side . bottom)
+     ;;  (slot . -1))
+
+     ("\\*\\(Backtrace\\|Warnings\\|Compile-Log\\|[Hh]elp\\|Messages\\|Bookmark List\\|Ibuffer\\|Occur\\|eldoc.*\\)\\*"
+      (display-buffer-in-side-window)
+      (window-height . 0.25)
+      (side . bottom)
+      (slot . 0))
+
+     ;; Example configuration for the LSP help buffer,
+     ;; keeps it always on bottom using 25% of the available space:
+     ("\\*\\(lsp-help\\)\\*"
+      (display-buffer-in-side-window)
+      (window-height . 0.25)
+      (side . bottom)
+      (slot . 0))
+
+     ;; Configuration for displaying various diagnostic buffers on
+     ;; bottom 25%:
+     ("\\*\\(Flymake diagnostics\\|xref\\|ivy\\|Swiper\\|Completions\\)"
+      (display-buffer-in-side-window)
+      (window-height . 0.25)
+      (side . bottom)
+      (slot . 1))
+	 )))
+
+
+;;; DIRED
+;; In Emacs, the `dired' package provides a powerful and built-in file manager
+;; that allows you to navigate and manipulate files and directories directly
+;; within the editor. If you're familiar with `oil.nvim', you'll find that
+;; `dired' offers similar functionality natively in Emacs, making file
+;; management seamless without needing external plugins.
+
+;; This configuration customizes `dired' to enhance its usability. The settings
+;; below specify how file listings are displayed, the target for file operations,
+;; and associations for opening various file types with their respective applications.
+;; For example, image files will open with `feh', while audio and video files
+;; will utilize `mpv'.
+(use-package dired
+  :ensure nil                                                ;; This is built-in, no need to fetch it.
+  :custom
+  (dired-listing-switches "-lah --group-directories-first")  ;; Display files in a human-readable format and group directories first.
+  (dired-dwim-target t)                                      ;; Enable "do what I mean" for target directories.
+  (dired-guess-shell-alist-user
+   '(("\\.\\(png\\|jpe?g\\|tiff\\)" "feh" "xdg-open" "open") ;; Open image files with `feh' or the default viewer.
+     ("\\.\\(mp[34]\\|m4a\\|ogg\\|flac\\|webm\\|mkv\\)" "mpv" "xdg-open" "open") ;; Open audio and video files with `mpv'.
+     (".*" "open" "xdg-open")))                              ;; Default opening command for other files.
+  (dired-kill-when-opening-new-dired-buffer t))               ;; Close the previous buffer when opening a new `dired' instance.
+
+;;; ISEARCH
+;; In this configuration, we're setting up isearch, Emacs's incremental search feature.
+;; Since we're utilizing Vim bindings, keep in mind that classic Vim search commands
+;; (like `/' and `?') are not bound in the same way. Instead, you'll need to use
+;; the standard Emacs shortcuts:
+;; - `C-s' to initiate a forward search
+;; - `C-r' to initiate a backward search
+;; The following settings enhance the isearch experience:
+(use-package isearch
+  :ensure nil                                  ;; This is built-in, no need to fetch it.
+  :config
+  (setq isearch-lazy-count t)                  ;; Enable lazy counting to show current match information.
+  (setq lazy-count-prefix-format "(%s/%s) ")   ;; Format for displaying current match count.
+  (setq lazy-count-suffix-format nil)          ;; Disable suffix formatting for match count.
+  (setq search-whitespace-regexp ".*?")        ;; Allow searching across whitespace.
+  :bind (("C-s" . isearch-forward)             ;; Bind C-s to forward isearch.
+         ("C-r" . isearch-backward)))          ;; Bind C-r to backward isearch.
+
+
+;;; VC
+;; The VC (Version Control) package is included here for awareness and completeness.
+;; While its support for Git is limited and generally considered subpar, it is good to know
+;; that it exists and can be used for other version control systems like Mercurial,
+;; Subversion, and Bazaar.
+;; Magit, which is often regarded as the "father" of Neogit, will be configured later
+;; for an enhanced Git experience.
+;; The keybindings below serve as a reminder of some common VC commands.
+;; But don't worry, you can always use `M-x command' :)
+(use-package vc
+  :ensure nil                        ;; This is built-in, no need to fetch it.
+  :defer t
+  :bind
+  (("C-x v d" . vc-dir)              ;; Open VC directory for version control status.
+   ("C-x v =" . vc-diff)             ;; Show differences for the current file.
+   ("C-x v D" . vc-root-diff)        ;; Show differences for the entire repository.
+   ("C-x v v" . vc-next-action))     ;; Perform the next version control action.
+  :config
+  ;; Better colors for <leader> g b  (blame file)
+  (setq vc-annotate-color-map
+        '((20 . "#f5e0dc")
+          (40 . "#f2cdcd")
+          (60 . "#f5c2e7")
+          (80 . "#cba6f7")
+          (100 . "#f38ba8")
+          (120 . "#eba0ac")
+          (140 . "#fab387")
+          (160 . "#f9e2af")
+          (180 . "#a6e3a1")
+          (200 . "#94e2d5")
+          (220 . "#89dceb")
+          (240 . "#74c7ec")
+          (260 . "#89b4fa")
+          (280 . "#b4befe"))))
+
+
+;;; SMERGE
+;; Smerge is included for resolving merge conflicts in files. It provides a simple interface
+;; to help you keep changes from either the upper or lower version during a merge.
+;; This package is built-in, so there's no need to fetch it separately.
+;; The keybindings below did not needed to be setted, are here just to show
+;; you how to work with it in case you are curious about it.
+(use-package smerge-mode
+  :ensure nil                                  ;; This is built-in, no need to fetch it.
+  :defer t
+  :bind (:map smerge-mode-map
+              ("C-c ^ u" . smerge-keep-upper)  ;; Keep the changes from the upper version.
+              ("C-c ^ l" . smerge-keep-lower)  ;; Keep the changes from the lower version.
+              ("C-c ^ n" . smerge-next)        ;; Move to the next conflict.
+              ("C-c ^ p" . smerge-previous)))  ;; Move to the previous conflict.
+
+
+;;; ELDOC
+;; Eldoc provides helpful inline documentation for functions and variables
+;; in the minibuffer, enhancing the development experience. It can be particularly useful
+;; in programming modes, as it helps you understand the context of functions as you type.
+;; This package is built-in, so there's no need to fetch it separately.
+;; The following line enables Eldoc globally for all buffers.
+(use-package eldoc
+  :ensure nil          ;; This is built-in, no need to fetch it.
+  :init
+  (global-eldoc-mode))
+
+
+;;; FLYMAKE
+;; Flymake is an on-the-fly syntax checking extension that provides real-time feedback
+;; about errors and warnings in your code as you write. This can greatly enhance your
+;; coding experience by catching issues early. The configuration below activates
+;; Flymake mode in programming buffers.
+(use-package flymake
+  :ensure nil          ;; This is built-in, no need to fetch it.
+  :defer t
+  :hook (prog-mode . flymake-mode)
+  :custom
+  (flymake-margin-indicators-string
+   '((error "!»" compilation-error) (warning "»" compilation-warning)
+	 (note "»" compilation-info))))
+
+
+
+;;; ==================== EXTERNAL PACKAGES ====================
+;;
+;; From this point onward, all configurations will be for third-party packages
+;; that enhance Emacs' functionality and extend its capabilities.
+
+(use-package vertico
+  :hook
+  (after-init . vertico-mode)           ;; Enable vertico after Emacs has initialized.
+  )
+
+
+;;; ORDERLESS
+;; Orderless enhances completion in Emacs by allowing flexible pattern matching.
+;; It works seamlessly with Vertico, enabling you to use partial strings and
+;; regular expressions to find files, buffers, and commands more efficiently.
+;; This combination provides a powerful and customizable completion experience.
+(use-package orderless
+  :defer t                                    ;; Load Orderless on demand.
+  :after vertico                              ;; Ensure Vertico is loaded before Orderless.
+  :init
+  (setq completion-styles '(orderless basic)  ;; Set the completion styles.
+        completion-category-defaults nil      ;; Clear default category settings.
+        completion-category-overrides '((file (styles partial-completion))))) ;; Customize file completion styles.
+
+(use-package marginalia
+  :hook
+  (after-init . marginalia-mode))
+
+
+;;; CONSULT
+;; Consult provides powerful completion and narrowing commands for Emacs.
+;; It integrates well with other completion frameworks like Vertico, enabling
+;; features like previews and enhanced register management. It's useful for
+;; navigating buffers, files, and xrefs with ease.
+(use-package consult
+  :defer t
+  :init
+  ;; Enhance register preview with thin lines and no mode line.
+  (advice-add #'register-preview :override #'consult-register-window)
+
+  ;; Use Consult for xref locations with a preview feature.
+  (setq xref-show-xrefs-function #'consult-xref
+        xref-show-definitions-function #'consult-xref))
+
+
+;;; EMBARK
+;; Embark provides a powerful contextual action menu for Emacs, allowing
+;; you to perform various operations on completion candidates and other items.
+;; It extends the capabilities of completion frameworks by offering direct
+;; actions on the candidates.
+;; Just `<leader> .' over any text, explore it :)
+(use-package embark
+  :defer t)
+
+
+;;; EMBARK-CONSULT
+;; Embark-Consult provides a bridge between Embark and Consult, ensuring
+;; that Consult commands, like previews, are available when using Embark.
+(use-package embark-consult
+  :hook
+  (embark-collect-mode . consult-preview-at-point-mode)) ;; Enable preview in Embark collect mode.
+
+
+;;; TREESITTER-AUTO
+;; Treesit-auto simplifies the use of Tree-sitter grammars in Emacs,
+;; providing automatic installation and mode association for various
+;; programming languages. This enhances syntax highlighting and
+;; code parsing capabilities, making it easier to work with modern
+;; programming languages.
+(use-package treesit-auto
+  :after emacs
+  :custom
+  (treesit-auto-install 'prompt)
+  :config
+  (treesit-auto-add-to-auto-mode-alist 'all)
+  (global-treesit-auto-mode))
+
+;;; COMPANY
+;; Company Mode provides a text completion framework for Emacs.
+;; It enhances the editing experience by offering context-aware
+;; suggestions as you type. With support for multiple backends,
+;; Company Mode is highly customizable and can be integrated with
+;; various modes and languages.
+(use-package company
+  :defer t
+  :custom
+  (company-tooltip-align-annotations t)      ;; Align annotations with completions.
+  (company-minimum-prefix-length 1)          ;; Trigger completion after typing 1 character
+  (company-idle-delay 0.2)                   ;; Delay before showing completion (adjust as needed)
+  (company-tooltip-maximum-width 50)
+  :config
+
+  ;; While using C-p C-n to select a completion candidate
+  ;; C-y quickly shows help docs for the current candidate
+  (define-key company-active-map (kbd "C-y")
+			  (lambda ()
+				(interactive)
+				(company-show-doc-buffer)))
+  (define-key company-active-map [tab] 'company-complete-common-or-cycle)
+  (define-key company-active-map (kbd "TAB") 'company-complete-common-or-cycle)
+  (define-key company-active-map [ret] 'company-complete-selection)
+  (define-key company-active-map (kbd "RET") 'company-complete-selection)
+  :hook
+  (after-init . global-company-mode)) ;; Enable Company Mode globally after initialization.
+
+#+end_src
+
+* Theme
+Use the awesome[[https://protesilaos.com/emacs/modus-themes][ Modus themes]]  
+#+begin_src emacs-lisp
+(use-package modus-themes
+  :config
+  (define-key global-map (kbd "<f5>") #'modus-themes-toggle)
+  (load-theme 'modus-vivendi t)
+)
+#+end_src
+* Editor
+** format-all
+#+begin_src emacs-lisp
+(use-package format-all
+  :commands format-all-mode
+  :hook (prog-mode . format-all-mode))
+#+end_src
+** Git
+*** Magit
+#+begin_src emacs-lisp
+(use-package magit
+  :defer t)
+#+end_src
+*** Diff-HL
+Diff-HL provides marking for unstaged, uncommited, changed, added, removed lines
+#+begin_src emacs-lisp
+(use-package diff-hl
+  :defer t
+  :hook
+  (find-file . (lambda ()
+                 (global-diff-hl-mode)           ;; Enable Diff-HL mode for all files.
+                 (diff-hl-flydiff-mode)          ;; Automatically refresh diffs.
+                 (diff-hl-margin-mode)))         ;; Show diff indicators in the margin.
+  :custom
+  (diff-hl-side 'left)                           ;; Set the side for diff indicators.
+  (diff-hl-margin-symbols-alist '((insert . "│") ;; Customize symbols for each change type.
+                                  (delete . "-")
+                                  (change . "│")
+                                  (unknown . "?")
+                                  (ignored . "i"))))
+#+end_src
+** Keybinds
+#+begin_src emacs-lisp
+(defvar-keymap prefix-find-files-map
+  :doc "Find Files"
+  "/" 'consult-line
+  "C" 'consult-git-grep
+  "c" #'(lambda() (interactive)(find-file "~/.emacs.d/config.org"))
+  "f" 'consult-find
+  "g" 'consult-ripgrep
+  "h" 'consult-info
+) 
+
+(defvar-keymap prefix-org-map
+  :doc "Org mode keys"
+  "a" 'org-agenda
+  "c" 'org-capture
+  "e" 'org-export-dispatch
+
+  ;; Files
+  "b" '(lambda() (interactive)(find-file "~/persist/org/books.org"))
+  "i" '(lambda() (interactive)(find-file "~/persist/org/inbox.org"))
+  "j" '(lambda() (interactive)(find-file "~/persist/org/journal.org"))
+  "n" '(lambda() (interactive)(find-file "~/persist/org/notes.org"))
+  "w" '(lambda() (interactive)(find-file "~/persist/org/work.org"))
+  )
+
+(defvar-keymap prefix-mode-map
+  "r" 'org-refile
+  
+  ;; Org tables
+  "b d c" 'org-table-delete-column
+  "b d r" 'org-table-delete-row
+
+  ;; Org dates
+  "d d" 'org-deadline
+  "d s" 'org-schedule
+  "d t" 'org-time-stamp
+  "d T" 'org-time-stamp-inactive
+
+  ;; Org subtree
+  "s n" 'org-narrow-to-subtree
+  "s N" 'widen
+  "s r" 'org-refile
+  "s S" 'org-sort
+  )
+
+(defvar-keymap prefix-magit-map
+  :doc "Magit keybindings for Git integration"
+  "g" 'magit-status      ;; Open Magit status
+  "l" 'magit-log-current ;; Show current log
+  "d" 'magit-diff-buffer-file ;; Show diff for the current file
+  "D" 'diff-hl-show-hunk ;; Show diff for a hunk
+  "b" 'vc-annotate       ;; Annotate buffer with version control info
+)
+
+(defvar-keymap prefix-dired-map
+  :doc "Dired commands for file management"
+  "d" 'dired
+  "j" 'dired-jump
+  "f" 'find-file
+  )
+
+(defvar-keymap prefix-project-map
+  :doc "Project management keybindings"
+  "b" 'consult-project-buffer ;; Consult project buffer
+  "p" 'project-switch-project ;; Switch project
+  "f" 'project-find-file ;; Find file in project
+  "g" 'project-find-regexp ;; Find regexp in project
+  "k" 'project-kill-buffers ;; Kill project buffers
+  "D" 'project-dired ;; Dired for project
+)
+
+(defvar-keymap prefix-buffer-map
+  :doc "Buffer management keybindings"
+  "b" 'ibuffer ;; Open Ibuffer
+  "d" 'kill-current-buffer ;; Kill current buffer
+  "i" 'consult-buffer ;; Open consult buffer list
+  "k" 'kill-current-buffer ;; Kill current buffer
+  "l" 'consult-buffer ;; Consult buffer
+  "s" 'save-buffer ;; Save buffer
+  "x" 'kill-current-buffer ;; Kill current buffer
+  )
+
+(defvar-keymap prefix-neotree-map
+  :doc "NeoTree command for file exploration"
+  "e" 'neotree-toggle
+)
+
+(defvar-keymap prefix-compute-map
+  :doc "Compute"
+  "r" 'elisp-eval-region-or-buffer ;; Reload config
+  )
+
+(defvar-keymap spc-prefix-map
+  :doc "My prefix key map."
+  "b" prefix-buffer-map
+  "c" prefix-compute-map
+  "e" prefix-neotree-map
+  "f" prefix-find-files-map
+  "g" prefix-magit-map
+  "m" prefix-mode-map
+  "o" prefix-org-map
+  "p" prefix-project-map
+  "x" prefix-dired-map
+  )
+
+(which-key-add-keymap-based-replacements spc-prefix-map
+  "f" `("find files" . ,prefix-find-files-map))
+#+end_src
+** Evil Mode
+#+begin_src emacs-lisp
+;; EVIL
+;; The `evil' package provides Vim emulation within Emacs, allowing
+;; users to edit text in a modal way, similar to how Vim
+;; operates. This setup configures `evil-mode' to enhance the editing
+;; experience.
+(use-package evil
+  :hook
+  (after-init . evil-mode)
+  :init
+  (setq evil-want-integration t)      ;; Integrate `evil' with other Emacs features (optional as it's true by default).
+  (setq evil-want-keybinding nil)     ;; Disable default keybinding to set custom ones.
+  (setq evil-want-C-u-scroll t)       ;; Makes C-u scroll
+  (setq evil-want-C-u-delete t)       ;; Makes C-u delete on insert mode
+  :config
+  (evil-set-undo-system 'undo-tree)   ;; Uses the undo-tree package as the default undo system
+
+  ;; Set the leader key to space for easier access to custom commands. (setq evil-want-leader t)
+  (setq evil-leader/in-all-states t)  ;; Make the leader key available in all states.
+  (setq evil-want-fine-undo t)        ;; Evil uses finer grain undoing steps
+
+  (evil-define-key '(normal motion visual) 'global
+    (kbd "RET") nil ; unset RET to use with org-return-follows-link
+    (kbd "SPC") spc-prefix-map
+    )
+  
+  ;; Flymake navigation
+  (evil-define-key 'normal 'global (kbd "<leader> x x") 'consult-flymake);; Gives you something like `trouble.nvim'
+  (evil-define-key 'normal 'global (kbd "] d") 'flymake-goto-next-error) ;; Go to next Flymake error
+  (evil-define-key 'normal 'global (kbd "[ d") 'flymake-goto-prev-error) ;; Go to previous Flymake error
+
+  ;; Yank from kill ring
+  (evil-define-key 'normal 'global (kbd "P") 'consult-yank-from-kill-ring)
+  (evil-define-key 'normal 'global (kbd "<leader> P") 'consult-yank-from-kill-ring)
+
+  ;; Embark actions for contextual commands
+  (evil-define-key 'normal 'global (kbd "<leader> .") 'embark-act)
+
+  ;; Undo tree visualization
+  (evil-define-key 'normal 'global (kbd "<leader> u") 'undo-tree-visualize)
+
+  ;; Help keybindings
+  (evil-define-key 'normal 'global (kbd "<leader> h m") 'describe-mode) ;; Describe current mode
+  (evil-define-key 'normal 'global (kbd "<leader> h f") 'describe-function) ;; Describe function
+  (evil-define-key 'normal 'global (kbd "<leader> h v") 'describe-variable) ;; Describe variable
+  (evil-define-key 'normal 'global (kbd "<leader> h k") 'describe-key) ;; Describe key
+
+  ;; Tab navigation
+  (evil-define-key 'normal 'global (kbd "] t") 'tab-next) ;; Go to next tab
+  (evil-define-key 'normal 'global (kbd "[ t") 'tab-previous) ;; Go to previous tab
+
+  ;; Custom example. Formatting with prettier tool.
+  (evil-define-key 'normal 'global (kbd "<leader> c f") 'format-all-buffer) ;; formatter
+
+  ;; LSP commands keybindings
+  (evil-define-key 'normal lsp-mode-map
+    ;; (kbd "gd") 'lsp-find-definition                ;; evil-collection already provides gd
+    (kbd "gr") 'lsp-find-references                   ;; Finds LSP references
+    (kbd "<leader> c a") 'lsp-execute-code-action     ;; Execute code actions
+    (kbd "<leader> r n") 'lsp-rename                  ;; Rename symbol
+    (kbd "gI") 'lsp-find-implementation               ;; Find implementation
+    (kbd "<leader> l f") 'lsp-format-buffer)          ;; Format buffer via lsp
+
+  ;; Commenting functionality for single and multiple lines
+  (evil-define-key 'normal 'global (kbd "gcc")
+  (lambda ()
+  (interactive)
+  (if (not (use-region-p))
+  (comment-or-uncomment-region (line-beginning-position) (line-end-position)))))
+
+  (evil-define-key 'visual 'global (kbd "gc")
+  (lambda ()
+  (interactive)
+  (if (use-region-p)
+  (comment-or-uncomment-region (region-beginning) (region-end)))))
+
+  ;; Enable evil mode
+  (evil-mode 1))
+
+
+;; EVIL COLLECTION
+;; The `evil-collection' package enhances the integration of
+;; `evil-mode' with various built-in and third-party packages. It
+;; provides a better modal experience by remapping keybindings and
+;; commands to fit the `evil' style.
+(use-package evil-collection
+  :defer t
+  :custom
+  (evil-collection-want-find-usages-bindings t)
+  ;; Hook to initialize `evil-collection' when `evil-mode' is activated.
+  :hook
+  (evil-mode . evil-collection-init))
+
+
+;; EVIL SURROUND
+;; The `evil-surround' package provides text object surround
+;; functionality for `evil-mode'. This allows for easily adding,
+;; changing, or deleting surrounding characters such as parentheses,
+;; quotes, and more.
+;;
+;; With this you can change 'hello there' with ci'" to have
+;; "hello there" and cs"<p> to get <p>hello there</p>.
+;; More examples here:
+;; - https://github.com/emacs-evil/evil-surround?tab=readme-ov-file#examples
+(use-package evil-surround
+  :after evil-collection
+  :config
+  (global-evil-surround-mode 1))
+
+
+;; EVIL MATCHIT
+;; The `evil-matchit' package extends `evil-mode' by enabling
+;; text object matching for structures such as parentheses, HTML
+;; tags, and other paired delimiters. This makes it easier to
+;; navigate and manipulate code blocks.
+;; Just use % for jumping between matching structures to check it out.
+(use-package evil-matchit
+  :after evil-collection
+  :config
+  (global-evil-matchit-mode 1))
+#+end_src
+*** org-evil
+#+begin_src emacs-lisp
+(use-package evil-org
+  :after org
+  :hook (org-mode . (lambda () evil-org-mode))
+  :config
+  (require 'evil-org-agenda)
+  (evil-org-agenda-set-keys))
+#+end_src
+** Undo tree
+Navigtable undo tree
+#+begin_src emacs-lisp
+(use-package undo-tree
+  :defer t
+  :hook
+  (after-init . global-undo-tree-mode)
+  :init
+  (setq undo-tree-visualizer-timestamps t
+        undo-tree-visualizer-diff t
+        ;; Increase undo limits to avoid losing history due to Emacs' garbage collection.
+        ;; These values can be adjusted based on your needs.
+        ;; 10X bump of the undo limits to avoid issues with premature
+        ;; Emacs GC which truncates the undo history very aggressively.
+        undo-limit 800000                     ;; Limit for undo entries.
+        undo-strong-limit 12000000            ;; Strong limit for undo entries.
+        undo-outer-limit 120000000)           ;; Outer limit for undo entries.
+  :config
+  ;; Set the directory where `undo-tree' will save its history files.
+  ;; This keeps undo history across sessions, stored in a cache directory.
+  (setq undo-tree-history-directory-alist '(("." . "~/.emacs.d/.cache/undo"))))
+#+end_src
+** doom-modeline
+Modern, cool looking line
+#+begin_src emacs-lisp
+(use-package doom-modeline
+  :defer t
+  :custom
+  (doom-modeline-buffer-file-name-style 'buffer-name)  ;; Set the buffer file name style to just the buffer name (without path).
+  (doom-modeline-project-detection 'project)           ;; Enable project detection for displaying the project name.
+  (doom-modeline-buffer-name t)                        ;; Show the buffer name in the mode line.
+  (doom-modeline-vcs-max-length 25)                    ;; Limit the version control system (VCS) branch name length to 25 characters.
+  :hook
+  (after-init . doom-modeline-mode))
+#+end_src
+** neotree
+Neotree is a file tree explorer.
+#+begin_src emacs-lisp
+(use-package neotree
+  :custom
+  (neo-show-hidden-files t)                ;; By default shows hidden files (toggle with H)
+  (neo-theme 'nerd-icons)                  ;; Set the default theme for Neotree to 'nerd-icons' for a visually appealing look.
+  (neo-vc-integration '(face char))        ;; Enable VC integration to display file states with faces (color coding) and characters (icons).
+  :defer t)                                 ;; Load the package only when needed to improve startup time.
+#+end_src
+** Which Key
+Which-key display the possible key bindings after a short delay
+
+#+begin_src emacs-lisp
+(use-package which-key
+  :ensure nil     ;; This is built-in, no need to fetch it.
+  :defer t        ;; Defer loading Which-Key until after init.
+  :hook
+  (after-init . which-key-mode)) ;; Enable which-key mode after initialization.
+
+#+end_src
+** Rainbow Delimitiers
+Makes bracket share colors
+#+begin_src emacs-lisp
+(use-package rainbow-delimiters
+  :defer t
+  :hook
+  (prog-mode . rainbow-delimiters-mode))
+#+end_src
+** Nerd Icons
+Enables Nerd icons
+#+begin_src emacs-lisp
+;;; NERD ICONS
+;; The `nerd-icons' package provides a set of icons for use in Emacs. These icons can
+;; enhance the visual appearance of various modes and packages, making it easier to
+;; distinguish between different file types and functionalities.
+(use-package nerd-icons
+  :if ek-use-nerd-fonts                   ;; Load the package only if the user has configured to use nerd fonts.
+  :defer t)                               ;; Load the package only when needed to improve startup time.
+
+
+;;; NERD ICONS Dired
+;; The `nerd-icons-dired' package integrates nerd icons into the Dired mode,
+;; providing visual icons for files and directories. This enhances the Dired
+;; interface by making it easier to identify file types at a glance.
+(use-package nerd-icons-dired
+  :if ek-use-nerd-fonts                   ;; Load the package only if the user has configured to use nerd fonts.
+  :defer t                                ;; Load the package only when needed to improve startup time.
+  :hook
+  (dired-mode . nerd-icons-dired-mode))
+
+
+;;; NERD ICONS COMPLETION
+;; The `nerd-icons-completion' package enhances the completion interfaces in
+;; Emacs by integrating nerd icons with completion frameworks such as
+;; `marginalia'. This provides visual cues for the completion candidates,
+;; making it easier to distinguish between different types of items.
+(use-package nerd-icons-completion
+  :if ek-use-nerd-fonts                   ;; Load the package only if the user has configured to use nerd fonts.
+  :after (:all nerd-icons marginalia)     ;; Load after `nerd-icons' and `marginalia' to ensure proper integration.
+  :config
+  (nerd-icons-completion-mode)            ;; Activate nerd icons for completion interfaces.
+  (add-hook 'marginalia-mode-hook #'nerd-icons-completion-marginalia-setup)) ;; Setup icons in the marginalia mode for enhanced completion display.
+
+#+end_src
+* Modes
+** Markdown Mode
+#+begin_src emacs-lisp
+(use-package markdown-mode
+  :defer t
+  :mode ("README\\.md\\'" . gfm-mode)            ;; Use gfm-mode for README.md files.
+  :init (setq markdown-command "multimarkdown")) ;; Set the Markdown processing command.
+#+end_src
+** lsp-mode
+#+begin_src emacs-lisp
+;;; LSP
+;; Emacs comes with an integrated LSP client called `eglot', which offers basic LSP functionality.
+;; However, `eglot' has limitations, such as not supporting multiple language servers
+;; simultaneously within the same buffer (e.g., handling both TypeScript, Tailwind and ESLint
+;; LSPs together in a React project). For this reason, the more mature and capable
+;; `lsp-mode' is included as a third-party package, providing advanced IDE-like features
+;; and better support for multiple language servers and configurations.
+;;
+;; NOTE: To install or reinstall an LSP server, use `M-x install-server RET`.
+;;       As with other editors, LSP configurations can become complex. You may need to
+;;       install or reinstall the server for your project due to version management quirks
+;;       (e.g., asdf or nvm) or other issues.
+;;       Fortunately, `lsp-mode` has a great resource site:
+;;       https://emacs-lsp.github.io/lsp-mode/
+(use-package lsp-mode
+  :defer t
+  :hook (;; Replace XXX-mode with concrete major mode (e.g. python-mode)
+         (bash-ts-mode . lsp)                           ;; Enable LSP for Bash
+         (typescript-ts-mode . lsp)                     ;; Enable LSP for TypeScript
+         (tsx-ts-mode . lsp)                            ;; Enable LSP for TSX
+         (js-mode . lsp)                                ;; Enable LSP for JavaScript
+         (js-ts-mode . lsp)                             ;; Enable LSP for JavaScript (TS mode)
+         (lsp-mode . lsp-enable-which-key-integration)) ;; Integrate with Which Key
+  :commands lsp
+  :custom
+  (lsp-keymap-prefix "C-c l")                           ;; Set the prefix for LSP commands.
+  (lsp-inlay-hint-enable t)                             ;; Enable inlay hints.
+  (lsp-completion-provider :none)                       ;; Disable the default completion provider.
+  (lsp-session-file (locate-user-emacs-file ".lsp-session")) ;; Specify session file location.
+  (lsp-log-io nil)                                      ;; Disable IO logging for speed.
+  (lsp-idle-delay 0)                                    ;; Set the delay for LSP to 0 (debouncing).
+  (lsp-keep-workspace-alive nil)                        ;; Disable keeping the workspace alive.
+  ;; Core settings
+  (lsp-enable-xref t)                                   ;; Enable cross-references.
+  (lsp-auto-configure t)                                ;; Automatically configure LSP.
+  (lsp-enable-links nil)                                ;; Disable links.
+  (lsp-eldoc-enable-hover t)                            ;; Enable ElDoc hover.
+  (lsp-enable-file-watchers nil)                        ;; Disable file watchers.
+  (lsp-enable-folding nil)                              ;; Disable folding.
+  (lsp-enable-imenu t)                                  ;; Enable Imenu support.
+  (lsp-enable-indentation nil)                          ;; Disable indentation.
+  (lsp-enable-on-type-formatting nil)                   ;; Disable on-type formatting.
+  (lsp-enable-suggest-server-download t)                ;; Enable server download suggestion.
+  (lsp-enable-symbol-highlighting t)                    ;; Enable symbol highlighting.
+  (lsp-enable-text-document-color nil)                  ;; Disable text document color.
+  ;; Modeline settings
+  (lsp-modeline-code-actions-enable nil)                ;; Keep modeline clean.
+  (lsp-modeline-diagnostics-enable nil)                 ;; Use `flymake' instead.
+  (lsp-modeline-workspace-status-enable t)              ;; Display "LSP" in the modeline when enabled.
+  (lsp-signature-doc-lines 1)                           ;; Limit echo area to one line.
+  (lsp-eldoc-render-all nil)                              ;; Render all ElDoc messages.
+  ;; Completion settings
+  (lsp-completion-enable t)                             ;; Enable completion.
+  (lsp-completion-enable-additional-text-edit t)        ;; Enable additional text edits for completions.
+  (lsp-enable-snippet nil)                              ;; Disable snippets
+  (lsp-completion-show-kind t)                          ;; Show kind in completions.
+  ;; Lens settings
+  (lsp-lens-enable t)                                   ;; Enable lens support.
+  ;; Headerline settings
+  (lsp-headerline-breadcrumb-enable-symbol-numbers t)   ;; Enable symbol numbers in the headerline.
+  (lsp-headerline-arrow "▶")                            ;; Set arrow for headerline.
+  (lsp-headerline-breadcrumb-enable-diagnostics nil)    ;; Disable diagnostics in headerline.
+  (lsp-headerline-breadcrumb-icons-enable nil)          ;; Disable icons in breadcrumb.
+  ;; Semantic settings
+  (lsp-semantic-tokens-enable nil))                     ;; Disable semantic tokens.
+#+end_src
+** nix-ts-mode
+Enable nix mode for all *.nix files
+#+begin_src emacs-lisp
+(use-package nix-ts-mode
+  :mode "\\.nix\\'")
+#+end_src
+** Org Mode
+#+begin_src emacs-lisp
+(use-package org
+  :defer t        ;; Defer loading Org-mode until it's needed.
+  :hook
+  ((org-mode . org-indent-mode)
+   (org-mode . visual-line-mode))
+  :custom
+  (org-directory "~/persist/org/")
+  (org-agenda-files '("inbox.org" "work.org" "daybook.org" "notes.org"))
+  (org-ellipsis "⤵")
+
+  (global-hi-lock-mode 1)
+  (org-todo-keywords
+   '((sequence
+      "TODO(t)"  ; A task that needs doing & is ready to do
+      "STRT(s)"  ; A task that is in progress
+      "WAIT(w@/!)"  ; Something external is holding up this task
+      "HOLD(h)"  ; This task is paused/on hold because of me
+      "IDEA(i)"  ; An unconfirmed and unapproved task or notion
+      "|"
+      "DONE(d!)"  ; Task successfully completed
+      "KILL(k@)")) ; Task was cancelled, aborted, or is no longer applicable
+   )
+  (org-log-done 'time) ; Add timestamp when a task is closed
+  
+  (org-hide-leading-stars t)
+  (org-refile-targets
+   '((nil :maxlevel . 3)
+     (org-agenda-files :maxlevel . 3)) ;; add all agenda files as refile targets
+   ;; Without this, completers like ivy/helm are only given the first level of
+   ;; each outline candidates. i.e. all the candidates under the "Tasks" heading
+   ;; are just "Tasks/". This is unhelpful. We want the full path to each refile
+   ;; target! e.g. FILE/Tasks/heading/subheading
+   org-refile-use-outline-path 'file
+   org-outline-path-complete-in-steps nil)
+  )
+#+end_src
+*** Capture Templates
+#+begin_src emacs-lisp
+(setq org-capture-templates
+   '(
+	 ("p" "Personal")
+     ("pt" "Personal todo" entry
+      (file+headline "inbox.org" "todos")
+      "* TODO %?\n%i" :prepend t)
+     ("pn" "Personal notes" entry
+      (file+headline "inbox.org" "notes")
+      "* %u %?\n%i" :prepend t)
+     ("B" "Book" entry (file "books.org")
+      "** TODO %^{Title}
+                :PROPERTIES:
+                :name:     %\\1
+                :author:   %^{Author}
+                :pages:    %^{Pages}
+                :rating:   %^{Rating}
+                :END:\n%?"
+      )
+	 ("l" "Log Entry" entry (file+olp+datetree "daybook.org") "* %? %T")
+     ("j" "Journal entry" entry (file+datetree "journal.org") "* %(format-time-string \"%H:%M\") \n%?")
+	 ("b" "Bookmark" entry (file+headline "notes.org" "Bookmarks")
+	  "* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1))
+   )
+#+end_src
+*** super-agenda
+#+begin_src emacs-lisp
+(use-package org-super-agenda
+  :after org-agenda
+  :custom
+  (org-super-agenda-header-map nil)
+  (org-super-agenda-mode t)
+  (org-agenda-custom-commands
+   '(("p" "private"
+	  ((agenda "" ((org-agenda-span 'day)
+				  (org-super-agenda-groups
+				   '((:name "Today"
+							:time-grid t
+							:date today
+							:todo "TODAY"
+							:scheduled today
+							:order 1)))))
+	  (todo "" ((org-agenda-overriding-header "")
+				(org-super-agenda-groups
+				 '((:name "Important"
+						  :tag "Important"
+						  :priority "A"
+						  :order 6)
+				   (:name "Due Today"
+						  :deadline today
+						  :order 2)
+				   (:name "Due Soon"
+						  :deadline future
+						  :order 8)
+				   (:name "Overdue"
+						  :deadline past
+						  :face error
+						  :order 7)
+				   (:name "To read"
+						  :tag "read"
+						  :order 30)
+				   (:name "People"
+						  :tag "people"
+						  :order 19)
+				   (:name "Waiting"
+						  :todo "WAIT"
+						  :order 20)
+				   (:name "Personal"
+						  :tag "home"
+						  :order 29)
+				   )))))
+	  ((org-agenda-tag-filter '("-work" "-gifts"))))
+	 ("w" "work"
+	  ((agenda "" ((org-agenda-files '("~/persist/org/work.org"))
+				   (org-agenda-span 'day)
+				   (org-super-agenda-groups
+					'((:name "Today"
+							 :time-grid t
+							 :date today
+							 :todo "TODAY"
+							 :scheduled today
+							 :order 1)))))
+	   (todo "" ((org-agenda-files '("~/persist/org/work.org"))
+				 (org-agenda-overriding-header "")
+				 (org-super-agenda-groups
+				  '((:name "Important"
+						   :tag "Important"
+						   :priority "A"
+						   :order 6)
+					(:name "Due Today"
+						   :deadline today
+						   :order 2)
+					(:name "Due Soon"
+						   :deadline future
+						   :order 8)
+					(:name "Overdue"
+						   :deadline past
+						   :face error
+						   :order 7)
+					(:name "To read"
+						   :tag "read"
+						   :order 30)
+					(:name "Waiting"
+						   :todo "WAIT"
+						   :order 20)
+					))))))
+	 ("g" "gifts"
+	  ((tags-todo "+gifts" ((org-super-agenda-groups '((:auto-outline-path t))))))
+	  )
+	 )
+   )
+  )
+#+end_src
+
+*** org-superstar
+Transforms the * into nice symbols
+#+begin_src emacs-lisp
+(use-package org-superstar
+  :after org
+  :hook (org-mode . org-superstar-mode)
+  )
+#+end_src
+*** org-toc
+#+BEGIN_SRC emacs-lisp
+(use-package toc-org
+  :commands toc-org-enable
+  :hook (org-mode . toc-org-mode))
+#+END_SRC
+*** org-tempo
+Allow for expanding of src blocks automagically with "< s TAB "
+
+#+BEGIN_SRC emacs-lisp
+(use-package org-tempo
+  :ensure nil
+  :after org)
+#+END_SRC
+*** Code Blocks
+#+begin_src emacs-lisp
+  (use-package ob-python :ensure nil)
+
+  (use-package org
+  :config
+  (setq org-confirm-babel-evaluate nil) ;; don't ask for permission to run
+  (setq org-src-window-setup 'current-window)
+  (setq org-edit-src-persistent-message nil)
+  (setq org-src-fontify-natively t)
+  (setq org-src-preserve-indentation t)
+  (setq org-src-tab-acts-natively t)
+  (setq org-edit-src-content-indentation 0))
+#+end_src
+*** org-re-reveal
+#+begin_src emacs-lisp
+(use-package org-re-reveal)
+#+end_src
