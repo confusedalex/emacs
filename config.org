@@ -466,6 +466,8 @@ Diff-HL provides marking for unstaged, uncommited, changed, added, removed lines
   )
 
 (defvar-keymap prefix-mode-map
+  "r" 'org-refile
+  
   ;; Org tables
   "b d c" 'org-table-delete-column
   "b d r" 'org-table-delete-row
