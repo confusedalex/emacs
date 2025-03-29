@@ -878,12 +878,12 @@ Enable nix mode for all *.nix files
    '((sequence
       "TODO(t)"  ; A task that needs doing & is ready to do
       "STRT(s)"  ; A task that is in progress
-      "WAIT(w)"  ; Something external is holding up this task
+      "WAIT(w@/!)"  ; Something external is holding up this task
       "HOLD(h)"  ; This task is paused/on hold because of me
       "IDEA(i)"  ; An unconfirmed and unapproved task or notion
       "|"
-      "DONE(d)"  ; Task successfully completed
-      "KILL(k)")) ; Task was cancelled, aborted, or is no longer applicable
+      "DONE(d!)"  ; Task successfully completed
+      "KILL(k@)")) ; Task was cancelled, aborted, or is no longer applicable
    )
   (org-log-done 'time) ; Add timestamp when a task is closed
   
