@@ -930,7 +930,7 @@ Enable nix mode for all *.nix files
   (org-super-agenda-header-map nil)
   (org-super-agenda-mode t)
   (org-agenda-custom-commands
-   '(("p" "private"
+   '(("pd" "private day"
 	  ((agenda "" ((org-agenda-span 'day)
 				  (org-super-agenda-groups
 				   '((:name "Today"
@@ -961,12 +961,44 @@ Enable nix mode for all *.nix files
 				   (:name "People"
 						  :tag "people"
 						  :order 19)
+				   (:name "Tech"
+						  :tag "tech"
+						  :order 19)
 				   (:name "Waiting"
 						  :todo "WAIT"
 						  :order 20)
-				   (:name "Personal"
-						  :tag "home"
-						  :order 29)
+				   )))))
+	  ((org-agenda-tag-filter '("-work" "-gifts"))))
+	 ("pw" "private week"
+	  ((agenda "" ((org-agenda-span 'week)))
+	  (todo "" ((org-agenda-overriding-header "")
+				(org-super-agenda-groups
+				 '((:name "Important"
+						  :tag "Important"
+						  :priority "A"
+						  :order 6)
+				   (:name "Due Today"
+						  :deadline today
+						  :order 2)
+				   (:name "Due Soon"
+						  :deadline future
+						  :order 8)
+				   (:name "Overdue"
+						  :deadline past
+						  :face error
+						  :order 7)
+				   (:name "To read"
+						  :tag "read"
+						  :order 30)
+				   (:name "People"
+						  :tag "people"
+						  :order 19)
+				   (:name "Tech"
+						  :tag "tech"
+						  :order 19)
+				   (:name "Waiting"
+						  :todo "WAIT"
+						  :order 20)
 				   )))))
 	  ((org-agenda-tag-filter '("-work" "-gifts"))))
 	 ("w" "work"
