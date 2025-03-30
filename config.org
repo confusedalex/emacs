@@ -53,7 +53,6 @@
 
 
 ;;; EMACS
-;;  This is biggest one. Keep going, plugins (oops, I mean packages) will be shorter :)
 (use-package emacs
   :custom                                         ;; Set custom variables to configure Emacs behavior.
   (column-number-mode t)                          ;; Display the column number in the mode line.
@@ -220,7 +219,6 @@
 ;; Magit, which is often regarded as the "father" of Neogit, will be configured later
 ;; for an enhanced Git experience.
 ;; The keybindings below serve as a reminder of some common VC commands.
-;; But don't worry, you can always use `M-x command' :)
 (use-package vc
   :ensure nil                        ;; This is built-in, no need to fetch it.
   :defer t
@@ -342,7 +340,6 @@
 ;; you to perform various operations on completion candidates and other items.
 ;; It extends the capabilities of completion frameworks by offering direct
 ;; actions on the candidates.
-;; Just `<leader> .' over any text, explore it :)
 (use-package embark
   :defer t)
 
