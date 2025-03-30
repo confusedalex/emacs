@@ -1075,7 +1075,7 @@ Allow for expanding of src blocks automagically with "< s TAB "
   (setq org-src-window-setup 'current-window)
   (setq org-edit-src-persistent-message nil)
   (setq org-src-fontify-natively t)
-  (setq org-src-preserve-indentation t)
+  (setq org-src-preserve-indentation t) ; use the indentation of the major mode
   (setq org-src-tab-acts-natively t)
   (setq org-edit-src-content-indentation 0))
 #+end_src
