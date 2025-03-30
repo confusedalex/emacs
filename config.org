@@ -73,7 +73,7 @@
   (mouse-wheel-progressive-speed nil)             ;; Disable progressive speed when scrolling
   (scroll-conservatively 10)                      ;; Smooth scrolling
 
-  (display-line-numbers-mode)                     ;; display line numbers
+  (global-display-line-numbers-mode 1)            ;; display line numbers
 
   :bind
   ("C-+" . text-scale-increase)
