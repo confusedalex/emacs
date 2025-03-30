@@ -838,6 +838,11 @@ Enable nix mode for all *.nix files
       "KILL(k@)")) ; Task was cancelled, aborted, or is no longer applicable
    )
   (org-log-done 'time) ; Add timestamp when a task is closed
+
+  ;; Only show 3 days in the past, and 7 in the future
+  (org-agenda-span 10)
+  (org-agenda-start-day "-3d")
+  (org-agenda-start-on-weekday nil) ; We don't need to start on a weekday, do we?
   
   (org-hide-leading-stars t)
   (org-refile-targets
