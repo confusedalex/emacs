@@ -1041,5 +1041,16 @@ Allow for expanding of src blocks automagically with "< s TAB "
 #+end_src
 *** org-re-reveal
 #+begin_src emacs-lisp
-(use-package org-re-reveal)
+(use-package org-re-reveal
+  :config
+  (setq org-re-reveal-revealjs-version "4")
+  (setq org-re-reveal-history t))
+(use-package oer-reveal)
+#+end_src
+*** TODO email
+#+begin_src emacs-lisp
+(use-package notmuch
+  :commands notmuch-hello
+  :bind (("C-c m" . notmuch-hello))
+  )
 #+end_src
