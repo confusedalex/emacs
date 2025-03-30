@@ -822,7 +822,7 @@ Enable nix mode for all *.nix files
    (org-mode . visual-line-mode))
   :custom
   (org-directory "~/persist/org/")
-  (org-agenda-files '("inbox.org" "work.org" "daybook.org" "notes.org"))
+  (org-agenda-files (append (list org-directory) (list "~/persist/org/memacs")))
   (org-ellipsis "⤵")
 
   (global-hi-lock-mode 1)
