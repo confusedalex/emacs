@@ -391,7 +391,13 @@ Diff-HL provides marking for unstaged, uncommited, changed, added, removed lines
   )
 
 (defvar-keymap prefix-mode-map
+  "A" #'org-archive-subtree-default
+  "e" #'org-export-dispatch
+  "h" #'org-toggle-heading	
+  "n" 'org-store-link
+  "o" 'org-set-property
   "r" 'org-refile
+  "t" 'org-todo
   
   ;; Org tables
   "b d c" 'org-table-delete-column
