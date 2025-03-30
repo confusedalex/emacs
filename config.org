@@ -17,10 +17,16 @@
   - [[#which-key][Which Key]]
   - [[#rainbow-delimitiers][Rainbow Delimitiers]]
   - [[#nerd-icons][Nerd Icons]]
+  - [[#minibuffer][Minibuffer]]
+  - [[#savehist][Savehist]]
+  - [[#corfu][Corfu]]
+  - [[#cape][Cape]]
+  - [[#yasnippet][Yasnippet]]
 - [[#modes][Modes]]
   - [[#markdown-mode][Markdown Mode]]
   - [[#lsp-mode][lsp-mode]]
   - [[#nix-ts-mode][nix-ts-mode]]
+  - [[#python][Python]]
   - [[#org-mode][Org Mode]]
 
 * Use-Package
