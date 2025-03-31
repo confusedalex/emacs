@@ -341,7 +341,7 @@ Diff-HL provides marking for unstaged, uncommited, changed, added, removed lines
   "/" 'consult-line
   "C" 'consult-git-grep
   "c" #'(lambda() (interactive)(find-file "~/.emacs.d/config.org"))
-  "f" 'consult-find
+  "f" 'consult-fd
   "g" 'consult-ripgrep
   "h" 'consult-info
 ) 
