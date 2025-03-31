@@ -819,7 +819,7 @@ Enable nix mode for all *.nix files
       (file+headline "inbox.org" "notes")
       "* %u %?\n%i" :prepend t)
      ("B" "Book" entry (file "books.org")
-      "** TODO %^{Title}
+      "** TODO %^{ Title }
                 :PROPERTIES:
                 :name:     %\\1
                 :author:   %^{Author}
