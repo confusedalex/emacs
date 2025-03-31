@@ -31,6 +31,7 @@
   - [[#envrc][envrc]]
   - [[#nix-ts-mode][nix-ts-mode]]
   - [[#org-mode][Org Mode]]
+  - [[#python][python]]
 
 * Use-Package
 #+begin_src emacs-lisp
@@ -759,7 +760,7 @@ Cape adds more completions for corfu
   :ensure nil
   :hook (
 		 (nix-ts-mode-hook . eglot-ensure)
-		 (python-mode . eglot-ensure))
+		 (python-ts-mode . eglot-ensure))
   :custom
   ;; Good default
   (eglot-events-buffer-size 0) ;; No event buffers (Lsp server logs)
@@ -770,7 +771,7 @@ Cape adds more completions for corfu
                `(nix-ts-mode . ("nixd")))
   
   (add-to-list 'eglot-server-programs
-               `(python-mode . ("basedpyright")))
+               `(python-ts-mode . ("basedpyright")))
   )
 #+end_src
 ** envrc
@@ -1029,4 +1030,9 @@ Allow for expanding of src blocks automagically with "<s TAB " or "<el TAB" for 
   :commands notmuch-hello
   :bind (("C-c m" . notmuch-hello))
   )
+#+end_src
+** python
+Remap the python-mode to python-ts-mode
+#+begin_src emacs-lisp
+(add-to-list 'major-mode-remap-alist '(python-mode . python-ts-mode))
 #+end_src
