@@ -517,22 +517,26 @@ Diff-HL provides marking for unstaged, uncommited, changed, added, removed lines
   :config
   (evil-collection-init))
 
-
-;; EVIL SURROUND
-;; The `evil-surround' package provides text object surround
-;; functionality for `evil-mode'. This allows for easily adding,
-;; changing, or deleting surrounding characters such as parentheses,
-;; quotes, and more.
-;;
-;; With this you can change 'hello there' with ci'" to have
-;; "hello there" and cs"<p> to get <p>hello there</p>.
-;; More examples here:
-;; - https://github.com/emacs-evil/evil-surround?tab=readme-ov-file#examples
 (use-package evil-surround
   :after evil-collection
   :config
-  (global-evil-surround-mode 1))
+  (evil-define-command evil-mini-surround (char)
+	(interactive (evil-surround-input-char))
+	(call-interactively
+	 (pcase char
+       (?a #'evil-surround-region)
+       (?r #'evil-surround-change)
+       (?d #'evil-surround-delete))))
+  
+  (evil-define-key 'normal 'evil-surround-mode-map "s" 'evil-mini-surround)
 
+  ;; Remove the spacing that would be inserted
+  ;; see https://github.com/emacs-evil/evil-surround/commit/205c650d7fbfdbe2b917e1d90e701633a55e89df#r106953057
+  (add-to-list 'evil-surround-pairs-alist '(?\( . ("(" . ")")))
+  (add-to-list 'evil-surround-pairs-alist '(?\[ . ("[" . "]")))
+  (add-to-list 'evil-surround-pairs-alist '(?\( . ("{" . "}")))
+
+  (global-evil-surround-mode 1))
 
 ;; EVIL MATCHIT
 ;; The `evil-matchit' package extends `evil-mode' by enabling
