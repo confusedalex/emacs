@@ -497,16 +497,16 @@ Diff-HL provides marking for unstaged, uncommited, changed, added, removed lines
 
 
   (evil-define-key 'normal 'global (kbd "gcc")
-  (lambda ()
-  (interactive)
-  (if (not (use-region-p))
-  (comment-or-uncomment-region (line-beginning-position) (line-end-position)))))
-
+	(lambda ()
+	  (interactive)
+	  (if (not (use-region-p))
+		  (comment-or-uncomment-region (line-beginning-position) (line-end-position)))))
+  
   (evil-define-key 'visual 'global (kbd "gc")
-  (lambda ()
-  (interactive)
-  (if (use-region-p)
-  (comment-or-uncomment-region (region-beginning) (region-end)))))
+	(lambda ()
+	  (interactive)
+	  (if (use-region-p)
+		  (comment-or-uncomment-region (region-beginning) (region-end)))))
 
   ;; Enable evil mode
   (evil-mode 1))
