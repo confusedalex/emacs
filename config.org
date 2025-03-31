@@ -25,9 +25,8 @@
   - [[#yasnippet][Yasnippet]]
 - [[#modes][Modes]]
   - [[#markdown-mode][Markdown Mode]]
-  - [[#lsp-mode][lsp-mode]]
+  - [[#eglot][eglot]]
   - [[#nix-ts-mode][nix-ts-mode]]
-  - [[#python][Python]]
   - [[#org-mode][Org Mode]]
 
 * Use-Package
@@ -500,16 +499,6 @@ Diff-HL provides marking for unstaged, uncommited, changed, added, removed lines
   (evil-define-key 'normal 'global (kbd "[ t") 'tab-previous) ;; Go to previous tab
 
 
-  ;; LSP commands keybindings
-  (evil-define-key 'normal lsp-mode-map
-    ;; (kbd "gd") 'lsp-find-definition                ;; evil-collection already provides gd
-    (kbd "gr") 'lsp-find-references                   ;; Finds LSP references
-    (kbd "<leader> c a") 'lsp-execute-code-action     ;; Execute code actions
-    (kbd "<leader> r n") 'lsp-rename                  ;; Rename symbol
-    (kbd "gI") 'lsp-find-implementation               ;; Find implementation
-    (kbd "<leader> l f") 'lsp-format-buffer)          ;; Format buffer via lsp
-
-  ;; Commenting functionality for single and multiple lines
   (evil-define-key 'normal 'global (kbd "gcc")
   (lambda ()
   (interactive)
@@ -747,37 +736,31 @@ Cape adds more completions for corfu
   :mode ("README\\.md\\'" . gfm-mode)            ;; Use gfm-mode for README.md files.
   :init (setq markdown-command "multimarkdown")) ;; Set the Markdown processing command.
 #+end_src
-** lsp-mode
+** eglot
 #+begin_src emacs-lisp
-(use-package lsp-mode
+(use-package eglot
+  :ensure nil
   :hook (
-         (bash-ts-mode . lsp)                           ;; Enable LSP for Bash
-         (typescript-ts-mode . lsp)                     ;; Enable LSP for TypeScript
-         (tsx-ts-mode . lsp)                            ;; Enable LSP for TSX
-         (js-mode . lsp)                                ;; Enable LSP for JavaScript
-         (js-ts-mode . lsp)                             ;; Enable LSP for JavaScript (TS mode)
-         (nix-ts-mode . lsp)                            ;; Enable LSP for Nix
-		 (python-mode . lsp) 
-         (lsp-mode . lsp-enable-which-key-integration)) ;; Integrate with Which Key
-  :commands lsp
+		 (nix-ts-mode-hook . eglot-ensure)
+		 (python-mode . eglot-ensure))
   :custom
-  (lsp-keymap-prefix "C-c l"))                          ;; Set the prefix for LSP commands.
+  ;; Good default
+  (eglot-events-buffer-size 0) ;; No event buffers (Lsp server logs)
+  (eglot-autoshutdown t);; Shutdown unused servers.
+  (eglot-report-progress nil) ;; Disable lsp server logs (Don't show lsp messages at the bottom, java)
 
-(use-package lsp-ui :commands lsp-ui-mode)
+  (add-to-list 'eglot-server-programs
+               `(nix-ts-mode . ("nixd")))
+  
+  (add-to-list 'eglot-server-programs
+               `(python-mode . ("basedpyright")))
+  )
 #+end_src
 ** nix-ts-mode
 Enable nix mode for all *.nix files
 #+begin_src emacs-lisp
 (use-package nix-ts-mode
   :mode "\\.nix\\'")
-#+end_src
-** Python
-#+begin_src emacs-lisp
-(use-package lsp-pyright
-  :custom (lsp-pyright-langserver-command "basedpyright")
-  :hook (python-mode . (lambda ()
-                          (require 'lsp-pyright)
-                          (lsp))))
 #+end_src
 ** Org Mode
 #+begin_src emacs-lisp
