@@ -688,7 +688,8 @@ Orderless enables sort of a fuzzy search for searching commands. So "comm magi" 
         ([backtab] . corfu-previous))
   :custom
   (corfu-cycle t)           ;; Enable cycling for `corfu-next/previous'
-  (corfu-auto t)            ;; Enables auto-completion
+  (corfu-auto nil)            ;; Enables auto-completion
+  (corfu-auto-prefix 3)          ;; Minimum length of prefix for auto completion.
   (corfu-preselect 'prompt) ;; Always preselect the prompt
   (corfu-popupinfo-mode t)  ;; Enable popup information
   (corfu-popupinfo-delay 0.5)    ;; Lower popupinfo delay to 0.5 seconds from 2 seconds
