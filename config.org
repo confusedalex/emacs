@@ -26,6 +26,7 @@
 - [[#modes][Modes]]
   - [[#markdown-mode][Markdown Mode]]
   - [[#eglot][eglot]]
+  - [[#envrc][envrc]]
   - [[#nix-ts-mode][nix-ts-mode]]
   - [[#org-mode][Org Mode]]
 
@@ -755,6 +756,12 @@ Cape adds more completions for corfu
   (add-to-list 'eglot-server-programs
                `(python-mode . ("basedpyright")))
   )
+#+end_src
+** envrc
+envrc automagically loads into direnv
+#+begin_src emacs-lisp
+(use-package envrc
+  :hook (after-init . envrc-global-mode))
 #+end_src
 ** nix-ts-mode
 Enable nix mode for all *.nix files
