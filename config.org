@@ -428,6 +428,7 @@ Diff-HL provides marking for unstaged, uncommited, changed, added, removed lines
 (defvar-keymap prefix-compute-map
   :doc "Compute"
   "r" 'elisp-eval-region-or-buffer ;; Reload config
+  "f" 'format-all-buffer ;; Formatter
   )
 
 (defvar-keymap spc-prefix-map
@@ -498,8 +499,6 @@ Diff-HL provides marking for unstaged, uncommited, changed, added, removed lines
   (evil-define-key 'normal 'global (kbd "] t") 'tab-next) ;; Go to next tab
   (evil-define-key 'normal 'global (kbd "[ t") 'tab-previous) ;; Go to previous tab
 
-  ;; Custom example. Formatting with prettier tool.
-  (evil-define-key 'normal 'global (kbd "<leader> c f") 'format-all-buffer) ;; formatter
 
   ;; LSP commands keybindings
   (evil-define-key 'normal lsp-mode-map
