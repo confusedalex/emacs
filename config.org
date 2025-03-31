@@ -430,8 +430,11 @@ Diff-HL provides marking for unstaged, uncommited, changed, added, removed lines
 
 (defvar-keymap prefix-compute-map
   :doc "Compute"
-  "r" 'elisp-eval-region-or-buffer ;; Reload config
+  "b r" 'elisp-eval-region-or-buffer ;; Reload config
   "f" 'format-all-buffer ;; Formatter
+  "a" 'eglot-code-actions ;; Code actions
+  "r" 'eglot-rename ;; rename symbol
+  "i" 'eglot-inlay-hints-mode ;; Toggles inlay hints
   )
 
 (defvar-keymap spc-prefix-map
