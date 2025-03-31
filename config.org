@@ -8,6 +8,7 @@
 - [[#theme][Theme]]
 - [[#editor][Editor]]
   - [[#format-all][format-all]]
+  - [[#eat][eat]]
   - [[#git][Git]]
   - [[#keybinds][Keybinds]]
   - [[#evil-mode][Evil Mode]]
@@ -38,7 +39,8 @@
 (setq use-package-always-ensure t) ;; Always ensures that a package is installed
 (setq package-archives '(("melpa" . "https://melpa.org/packages/") ;; Sets default package repositories
 						 ("org" . "https://orgmode.org/elpa/")
-                         ("elpa" . "https://elpa.gnu.org/packages/")))
+                         ("elpa" . "https://elpa.gnu.org/packages/")
+						 ("nongnu" . "https://elpa.nongnu.org/nongnu/")))
 #+end_src
 * Some Defaults
 #+begin_src emacs-lisp
@@ -345,6 +347,11 @@ Use the awesome[[https://protesilaos.com/emacs/modus-themes][ Modus themes]]
 (use-package format-all
   :commands format-all-mode
   :hook (prog-mode . format-all-mode))
+#+end_src
+** eat
+#+begin_src emacs-lisp
+(use-package eat
+  :hook ('eshell-load-hook #'eat-eshell-mode))
 #+end_src
 ** Git
 *** Magit
