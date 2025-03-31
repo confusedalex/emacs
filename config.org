@@ -675,16 +675,23 @@ Orderless enables sort of a fuzzy search for searching commands. So "comm magi" 
 #+begin_src emacs-lisp
 (use-package corfu
   :hook (after-init . global-corfu-mode)
-  :bind (:map corfu-map ("<tab>" . corfu-complete))
-  :config
-  (setq tab-always-indent 'complete)
-  (setq corfu-preview-current nil)
-  (setq corfu-min-width 20)
+  ;; Enable Tab cycling
+  :bind
+  (:map corfu-map
+        ("TAB" . corfu-next)
+        ([ tab ] . corfu-next)
+        ("S-TAB" . corfu-previous)
+        ([backtab] . corfu-previous))
+  :custom
+  (corfu-cycle t)           ;; Enable cycling for `corfu-next/previous'
+  (corfu-auto t)            ;; Enables auto-completion
+  (corfu-preselect 'prompt) ;; Always preselect the prompt
+  (corfu-popupinfo-mode t)  ;; Enable popup information
+  (corfu-popupinfo-delay 0.5)    ;; Lower popupinfo delay to 0.5 seconds from 2 seconds
+  
+  (completion-ignore-case t)
 
-  (setq corfu-auto t)
-
-  (setq corfu-popupinfo-delay '(1.25 . 0.5))
-  (corfu-popupinfo-mode 1) ; shows documentation after `corfu-popupinfo-delay'
+  (text-mode-ispell-word-completion nil) ;; Disable Ispell completion
 
   ;; Sort by input history (no need to modify `corfu-sort-function').
   (with-eval-after-load 'savehist
@@ -709,10 +716,10 @@ Cape adds more completions for corfu
   (add-to-list 'completion-at-point-functions #'cape-elisp-block) ;; Complete elisp in Org or Markdown mode
   (add-to-list 'completion-at-point-functions #'cape-keyword) ;; Keyword/Snipet completion
 
-  (add-to-list 'completion-at-point-functions #'cape-abbrev) ;; Complete abbreviation
-  ;; (add-to-list 'completion-at-point-functions #'cape-history) ;; Complete from Eshell, Comint or minibuffer history
-  (add-to-list 'completion-at-point-functions #'cape-line) ;; Complete entire line from current buffer
-  (add-to-list 'completion-at-point-functions #'cape-elisp-symbol) ;; Complete Elisp symbol
+  ;; (add-to-list 'completion-at-point-functions #'cape-abbrev) ;; Complete abbreviation
+  (add-to-list 'completion-at-point-functions #'cape-history) ;; Complete from Eshell, Comint or minibuffer history
+  ;; (add-to-list 'completion-at-point-functions #'cape-line) ;; Complete entire line from current buffer
+  ;; (add-to-list 'completion-at-point-functions #'cape-elisp-symbol) ;; Complete Elisp symbol
   ;;(add-to-list 'completion-at-point-functions #'cape-tex) ;; Complete Unicode char from TeX command, e.g. \hbar
   ;;(add-to-list 'completion-at-point-functions #'cape-sgml) ;; Complete Unicode char from SGML entity, e.g., &alpha
   ;;(add-to-list 'completion-at-point-functions #'cape-rfc1345) ;; Complete Unicode char using RFC 1345 mnemonics
