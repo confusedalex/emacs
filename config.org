@@ -792,6 +792,8 @@ Enable nix mode for all *.nix files
   (org-agenda-span 10)
   (org-agenda-start-day "-3d")
   (org-agenda-start-on-weekday nil) ; We don't need to start on a weekday, do we?
+
+  (org-return-follows-link t)
   
   (org-hide-leading-stars t)
   (org-refile-targets
