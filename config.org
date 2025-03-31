@@ -479,10 +479,6 @@ Diff-HL provides marking for unstaged, uncommited, changed, added, removed lines
   (evil-define-key 'normal 'global (kbd "] d") 'flymake-goto-next-error) ;; Go to next Flymake error
   (evil-define-key 'normal 'global (kbd "[ d") 'flymake-goto-prev-error) ;; Go to previous Flymake error
 
-  ;; Yank from kill ring
-  (evil-define-key 'normal 'global (kbd "P") 'consult-yank-from-kill-ring)
-  (evil-define-key 'normal 'global (kbd "<leader> P") 'consult-yank-from-kill-ring)
-
   ;; Embark actions for contextual commands
   (evil-define-key 'normal 'global (kbd "<leader> .") 'embark-act)
 
