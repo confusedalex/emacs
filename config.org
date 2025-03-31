@@ -23,6 +23,7 @@
   - [[#corfu][Corfu]]
   - [[#cape][Cape]]
   - [[#smartparens][Smartparens]]
+  - [[#agressive-indent-mode][Agressive indent mode]]
   - [[#yasnippet][Yasnippet]]
 - [[#modes][Modes]]
   - [[#markdown-mode][Markdown Mode]]
@@ -725,6 +726,12 @@ Cape adds more completions for corfu
   :config
   ;; load default config
   (require 'smartparens-config))
+#+end_src
+** Agressive indent mode
+#+begin_src emacs-lisp
+(use-package aggressive-indent
+  :hook ((emacs-lisp-mode . aggressive-indent-mode)
+		 (lisp-mode . aggressive-indent-mode)))
 #+end_src
 ** Yasnippet
 #+begin_src emacs-lisp
