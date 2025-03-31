@@ -783,7 +783,7 @@ Enable nix mode for all *.nix files
       "HOLD(h)"  ; This task is paused/on hold because of me
       "IDEA(i)"  ; An unconfirmed and unapproved task or notion
       "|"
-      "DONE(d!)"  ; Task successfully completed
+      "DONE(d)"  ; Task successfully completed
       "KILL(k@)")) ; Task was cancelled, aborted, or is no longer applicable
    )
   (org-log-done 'time) ; Add timestamp when a task is closed
