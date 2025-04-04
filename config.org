@@ -750,7 +750,7 @@ Cape adds more completions for corfu
 (use-package yasnippet-snippets
   :hook (prog-mode . yas-minor-mode)) 
 #+end_src
-* Modes
+Modes
 ** Markdown Mode
 #+begin_src emacs-lisp
 (use-package markdown-mode
@@ -858,8 +858,12 @@ Enable nix mode for all *.nix files
 	 ("l" "Log Entry" entry (file+olp+datetree "daybook.org") "* %? %T")
      ("j" "Journal entry" entry (file+datetree "journal.org") "* %(format-time-string \"%H:%M\") \n%?")
 	 ("b" "Bookmark" entry (file+headline "notes.org" "Bookmarks")
-	  "* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1))
+	  "* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
+	 ("m" "Email Workflow")
+     ("mr" "Reply later" entry (file+headline "notes.org" "Reply later")
+     "* TODO Reply %:fromname with %:subject\n%a\n\n%i"))
    )
+   
 #+end_src
 *** super-agenda
 #+begin_src emacs-lisp
@@ -1030,9 +1034,38 @@ Allow for expanding of src blocks automagically with "<s TAB " or "<el TAB" for 
 #+end_src
 *** TODO email
 #+begin_src emacs-lisp
-(use-package notmuch
-  :commands notmuch-hello
-  :bind (("C-c m" . notmuch-hello))
+(use-package mu4e
+  :ensure nil
+  :custom
+  
+  (mu4e-change-filenames-when-moving t)
+
+  (mu4e-get-mail-command (concat (executable-find "mbsync") " personal")) 
+
+  (sendmail-program (executable-find "msmtp"))
+  (message-sendmail-envelope-from 'header)
+  (send-mail-function 'smtpmail-send-it) 
+  (message-sendmail-f-is-evil t)
+  (send-mail-function 'message-send-mail-with-sendmail
+					  message-send-mail-function 'message-send-mail-with-sendmail)
+
+  (mu4e-maildir "~/Mail/personal")
+  (mu4e-sent-folder "/Sent")
+  (mu4e-drafts-folder "/Drafts")
+  (mu4e-trash-folder "/Trash")
+  (mu4e-refile-folder "/Archive")
+
+  (mu4e-trash-without-flag t) ;; Don't flag trashed emails with trash
+
+  (mu4e-user-mail-address-list '("*@confusedalex.dev"
+                                 "*@confusedserver.de"
+                                 "alex@epostnet.de"))
+
+  :config
+  (add-to-list 'mu4e-bookmarks
+			   '( :name "Inbox"
+				  :key  ?i
+				  :query "maildir:/Inbox"))
   )
 #+end_src
 ** python
