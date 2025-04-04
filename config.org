@@ -25,13 +25,13 @@
   - [[#smartparens][Smartparens]]
   - [[#agressive-indent-mode][Agressive indent mode]]
   - [[#yasnippet][Yasnippet]]
-- [[#modes][Modes]]
   - [[#markdown-mode][Markdown Mode]]
   - [[#envrc][envrc]]
   - [[#eglot][eglot]]
   - [[#nix-ts-mode][nix-ts-mode]]
   - [[#org-mode][Org Mode]]
   - [[#python][python]]
+  - [[#github-copliot][Github Copliot]]
 
 * Use-Package
 #+begin_src emacs-lisp
@@ -361,9 +361,10 @@ Diff-HL provides marking for unstaged, uncommited, changed, added, removed lines
   )
 
 (defvar-keymap prefix-mode-map
-  "A" #'org-archive-subtree-default
-  "e" #'org-export-dispatch
-  "h" #'org-toggle-heading	
+  "A" 'org-archive-subtree-default
+  "e" 'org-export-dispatch
+  "f" 'consult-org-heading
+  "h" 'org-toggle-heading
   "n" 'org-store-link
   "o" 'org-set-property
   "r" 'org-refile
@@ -667,7 +668,10 @@ Orderless enables sort of a fuzzy search for searching commands. So "comm magi" 
 (use-package orderless
   :custom
   (completion-styles '(orderless basic))
-  (completion-category-overrides '((file (styles basic partial-completion)))))
+  (completion-category-overrides '((file (styles basic partial-completion))
+								   (eglot (styles orderless))
+                                   (eglot-capf (styles orderless))))
+  )
   #+end_src
 ** Savehist
 #+begin_src emacs-lisp
@@ -678,8 +682,8 @@ Orderless enables sort of a fuzzy search for searching commands. So "comm magi" 
 ** Corfu
 #+begin_src emacs-lisp
 (use-package corfu
+  :after orderless
   :hook (after-init . global-corfu-mode)
-  ;; Enable Tab cycling
   :bind
   (:map corfu-map
         ("TAB" . corfu-next)
@@ -688,7 +692,7 @@ Orderless enables sort of a fuzzy search for searching commands. So "comm magi" 
         ([backtab] . corfu-previous))
   :custom
   (corfu-cycle t)           ;; Enable cycling for `corfu-next/previous'
-  (corfu-auto nil)            ;; Enables auto-completion
+  (corfu-auto t)            ;; Enables auto-completion
   (corfu-auto-prefix 3)          ;; Minimum length of prefix for auto completion.
   (corfu-preselect 'prompt) ;; Always preselect the prompt
   (corfu-popupinfo-mode t)  ;; Enable popup information
@@ -714,6 +718,8 @@ Cape adds more completions for corfu
   ;; first function returning a result wins.  Note that the list of buffer-local
   ;; completion functions takes precedence over the global list.
   ;; The functions that are added later will be the first in the list
+
+  (advice-add 'eglot-completion-at-point :around #'cape-wrap-buster)
 
   (add-to-list 'completion-at-point-functions #'cape-dabbrev) ;; Complete word from current buffers
   (add-to-list 'completion-at-point-functions #'cape-dict) ;; Dictionary completion
