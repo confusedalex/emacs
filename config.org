@@ -27,8 +27,8 @@
   - [[#yasnippet][Yasnippet]]
 - [[#modes][Modes]]
   - [[#markdown-mode][Markdown Mode]]
-  - [[#eglot][eglot]]
   - [[#envrc][envrc]]
+  - [[#eglot][eglot]]
   - [[#nix-ts-mode][nix-ts-mode]]
   - [[#org-mode][Org Mode]]
   - [[#python][python]]
@@ -758,6 +758,12 @@ Cape adds more completions for corfu
   :mode ("README\\.md\\'" . gfm-mode)            ;; Use gfm-mode for README.md files.
   :init (setq markdown-command "multimarkdown")) ;; Set the Markdown processing command.
 #+end_src
+** envrc
+envrc automagically loads into direnv
+#+begin_src emacs-lisp
+(use-package envrc
+  :hook (after-init . envrc-global-mode))
+#+end_src
 ** eglot
 #+begin_src emacs-lisp
 (use-package eglot
@@ -777,12 +783,6 @@ Cape adds more completions for corfu
   (add-to-list 'eglot-server-programs
                `(python-ts-mode . ("basedpyright")))
   )
-#+end_src
-** envrc
-envrc automagically loads into direnv
-#+begin_src emacs-lisp
-(use-package envrc
-  :hook (after-init . envrc-global-mode))
 #+end_src
 ** nix-ts-mode
 Enable nix mode for all *.nix files
