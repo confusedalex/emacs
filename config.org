@@ -1022,42 +1022,14 @@ Allow for expanding of src blocks automagically with "<s TAB " or "<el TAB" for 
   (setq org-re-reveal-history t))
 (use-package oer-reveal)
 #+end_src
-*** TODO email
+*** Notmuch (email)
 #+begin_src emacs-lisp
-(use-package mu4e
-  :ensure nil
-  :custom
-  
-  (mu4e-change-filenames-when-moving t)
-
-  (mu4e-get-mail-command (concat (executable-find "mbsync") " personal")) 
-
-  (sendmail-program (executable-find "msmtp"))
-  (message-sendmail-envelope-from 'header)
-  (send-mail-function 'smtpmail-send-it) 
-  (message-sendmail-f-is-evil t)
-  (send-mail-function 'message-send-mail-with-sendmail
-					  message-send-mail-function 'message-send-mail-with-sendmail)
-
-  (mu4e-maildir "~/Mail/personal")
-  (mu4e-sent-folder "/Sent")
-  (mu4e-drafts-folder "/Drafts")
-  (mu4e-trash-folder "/Trash")
-  (mu4e-refile-folder "/Archive")
-
-  (mu4e-trash-without-flag t) ;; Don't flag trashed emails with trash
-
-  (mu4e-user-mail-address-list '("*@confusedalex.dev"
-                                 "*@confusedserver.de"
-                                 "alex@epostnet.de"))
-
+(use-package notmuch
+  :defer t
+  :commands notmuch-hello
   :config
-  (add-to-list 'mu4e-bookmarks
-			   '( :name "Inbox"
-				  :key  ?i
-				  :query "maildir:/Inbox"))
-  )
-#+end_src
+  (message-sendmail-envelope-from 'header) ;; This tells msmpt to which address this mail was send and sets it as the sender
+  :bind (("C-c m" . notmuch-hello)))
 #+end_src
 ** python
 Remap the python-mode to python-ts-mode
