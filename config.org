@@ -849,10 +849,7 @@ Enable nix mode for all *.nix files
 	 ("l" "Log Entry" entry (file+olp+datetree "daybook.org") "* %? %T")
      ("j" "Journal entry" entry (file+datetree "journal.org") "* %(format-time-string \"%H:%M\") \n%?")
 	 ("b" "Bookmark" entry (file+headline "notes.org" "Bookmarks")
-	  "* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
-	 ("m" "Email Workflow")
-     ("mr" "Reply later" entry (file+headline "notes.org" "Reply later")
-     "* TODO Reply %:fromname with %:subject\n%a\n\n%i"))
+	  "* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1))
    )
 #+end_src
 *** super-agenda
