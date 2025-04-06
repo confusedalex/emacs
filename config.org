@@ -771,8 +771,9 @@ envrc automagically loads into direnv
                `(nix-ts-mode . ("nixd")))
   
   (add-to-list 'eglot-server-programs
-               `(python-ts-mode . ("basedpyright")))
+               `(python-mode python-ts-mode) ("pyright-langserver" "--stdio"))
   )
+  
 #+end_src
 ** nix-ts-mode
 Enable nix mode for all *.nix files
