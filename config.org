@@ -226,21 +226,6 @@
   :init
   (global-eldoc-mode))
 
-
-;;; FLYMAKE
-;; Flymake is an on-the-fly syntax checking extension that provides real-time feedback
-;; about errors and warnings in your code as you write. This can greatly enhance your
-;; coding experience by catching issues early. The configuration below activates
-;; Flymake mode in programming buffers.
-(use-package flymake
-  :ensure nil          ;; This is built-in, no need to fetch it.
-  :defer t
-  :hook (prog-mode . flymake-mode)
-  :custom
-  (flymake-margin-indicators-string
-   '((error "!»" compilation-error) (warning "»" compilation-warning)
-	 (note "»" compilation-info))))
-
 ;;; CONSULT
 ;; Consult provides powerful completion and narrowing commands for Emacs.
 ;; It integrates well with other completion frameworks like Vertico, enabling
@@ -255,7 +240,6 @@
   ;; Use Consult for xref locations with a preview feature.
   (setq xref-show-xrefs-function #'consult-xref
         xref-show-definitions-function #'consult-xref))
-
 
 ;;; EMBARK
 ;; Embark provides a powerful contextual action menu for Emacs, allowing
