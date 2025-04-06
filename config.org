@@ -853,7 +853,6 @@ Enable nix mode for all *.nix files
      ("mr" "Reply later" entry (file+headline "notes.org" "Reply later")
      "* TODO Reply %:fromname with %:subject\n%a\n\n%i"))
    )
-   
 #+end_src
 *** super-agenda
 #+begin_src emacs-lisp
@@ -1039,12 +1038,17 @@ Remap the python-mode to python-ts-mode
 ** Github Copliot
 #+begin_src emacs-lisp
 (use-package copilot
+  :defer t
   :vc (:url "https://github.com/copilot-emacs/copilot.el"
             :rev :newest
             :branch "main")
-  :config
-  (add-hook 'prog-mode-hook 'copilot-mode)
-  (define-key copilot-completion-map (kbd "<tab>") 'copilot-accept-completion)
-  (define-key copilot-completion-map (kbd "TAB") 'copilot-accept-completion)
+  :hook (prog-mode . copilot-mode)
+  :bind 
+  ("<tab>" . 'copilot-accept-completion)
+  ("TAB" . 'copilot-accept-completion)
+  ("C-TAB" . 'copilot-accept-completion-by-word)
+  ("C-<tab>" . 'copilot-accept-completion-by-word)
+  ("C-n" . 'copilot-next-completion)
+  ("C-p" . 'copilot-previous-completion)
   )
 #+end_src
