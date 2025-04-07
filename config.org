@@ -764,7 +764,7 @@ envrc automagically loads into direnv
 (use-package eglot
   :ensure nil
   :hook (
-		 (nix-ts-mode-hook . eglot-ensure)
+		 (nix-ts-mode . eglot-ensure)
 		 (python-ts-mode . eglot-ensure))
   :custom
   ;; Good default
