@@ -834,28 +834,29 @@ Enable nix mode for all *.nix files
 *** Capture Templates
 #+begin_src emacs-lisp
 (setq org-capture-templates
-   '(
-	 ("p" "Personal")
-     ("pt" "Personal todo" entry
-      (file+headline "inbox.org" "todos")
-      "* TODO %?\n%i" :prepend t)
-     ("pn" "Personal notes" entry
-      (file+headline "inbox.org" "notes")
-      "* %u %?\n%i" :prepend t)
-     ("B" "Book" entry (file "books.org")
-      "** TODO %^{ Title }
-                :PROPERTIES:
-                :name:     %\\1
-                :author:   %^{Author}
-                :pages:    %^{Pages}
-                :rating:   %^{Rating}
-                :END:\n%?"
+      '(
+	    ("p" "Personal")
+        ("pt" "Personal todo" entry
+         (file+headline "inbox.org" "todos")
+         "* TODO %?\n%i" :prepend t)
+        ("pn" "Personal notes" entry
+         (file+headline "inbox.org" "notes")
+         "* %u %?\n%i" :prepend t)
+        ("B" "Book" entry (file "books.org")
+         "** TODO %^{ Title }
+        :PROPERTIES:
+        :name:     %\\1
+        :author:   %^{Author}
+        :pages:    %^{Pages}
+        :rating:   %^{Rating}
+        :END:\n%?"
+         )
+        ("l" "Log Entry" entry (file+olp+datetree "daybook.org") "* %? %T")
+        ("j" "Journal entry" entry (file+datetree "journal.org") "* %(format-time-string \"%H:%M\") \n%?")
+	    ("b" "Bookmark" entry (file+headline "notes.org" "Bookmarks")
+	     "* %? \n:PROPERTIES:\n:CREATED: %U\n:END:\n")
+        ("e" "Email capture" entry (file+headline "inbox.org" "todos") "* TODO %a"))
       )
-	 ("l" "Log Entry" entry (file+olp+datetree "daybook.org") "* %? %T")
-     ("j" "Journal entry" entry (file+datetree "journal.org") "* %(format-time-string \"%H:%M\") \n%?")
-	 ("b" "Bookmark" entry (file+headline "notes.org" "Bookmarks")
-	  "* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1))
-   )
 #+end_src
 *** super-agenda
 #+begin_src emacs-lisp
