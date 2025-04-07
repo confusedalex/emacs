@@ -295,6 +295,10 @@ Use doom emacs
 (use-package eat
   :hook ('eshell-load-hook #'eat-eshell-mode))
 #+end_src
+** PDF
+#+begin_src emacs-lisp
+(use-package pdf-tools)
+#+end_src
 ** Git
 *** Magit
 #+begin_src emacs-lisp
