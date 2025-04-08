@@ -9,6 +9,7 @@
 - [[#editor][Editor]]
   - [[#format-all][format-all]]
   - [[#eat][eat]]
+  - [[#pdf][PDF]]
   - [[#git][Git]]
   - [[#keybinds][Keybinds]]
   - [[#evil-mode][Evil Mode]]
@@ -23,14 +24,16 @@
   - [[#cape][Cape]]
   - [[#smartparens][Smartparens]]
   - [[#agressive-indent-mode][Agressive indent mode]]
-  - [[#yasnippet][Yasnippet]]
-  - [[#markdown-mode][Markdown Mode]]
   - [[#envrc][envrc]]
   - [[#eglot][eglot]]
+  - [[#github-copliot][Github Copliot]]
+- [[#languages][Languages]]
+  - [[#python][python]]
+  - [[#markdown-mode][Markdown Mode]]
+  - [[#go-mode][go-mode]]
   - [[#nix-ts-mode][nix-ts-mode]]
   - [[#org-mode][Org Mode]]
-  - [[#python][python]]
-  - [[#github-copliot][Github Copliot]]
+- [[#elfeed][Elfeed]]
 
 * Use-Package
 #+begin_src emacs-lisp
@@ -41,7 +44,8 @@
 (setq use-package-always-ensure t) ;; Always ensures that a package is installed
 (setq package-archives '(("melpa" . "https://melpa.org/packages/") ;; Sets default package repositories
                          ("elpa" . "https://elpa.gnu.org/packages/")
-						 ("nongnu" . "https://elpa.nongnu.org/nongnu/")))
+                         ("nongnu" . "https://elpa.nongnu.org/nongnu/") ;; For Eat Terminal
+                         ))
 #+end_src
 * Some Defaults
 #+begin_src emacs-lisp
@@ -223,37 +227,6 @@
   :ensure nil          ;; This is built-in, no need to fetch it.
   :init
   (global-eldoc-mode))
-
-;;; CONSULT
-;; Consult provides powerful completion and narrowing commands for Emacs.
-;; It integrates well with other completion frameworks like Vertico, enabling
-;; features like previews and enhanced register management. It's useful for
-;; navigating buffers, files, and xrefs with ease.
-(use-package consult
-  :defer t
-  :init
-  ;; Enhance register preview with thin lines and no mode line.
-  (advice-add #'register-preview :override #'consult-register-window)
-
-  ;; Use Consult for xref locations with a preview feature.
-  (setq xref-show-xrefs-function #'consult-xref
-        xref-show-definitions-function #'consult-xref))
-
-;;; EMBARK
-;; Embark provides a powerful contextual action menu for Emacs, allowing
-;; you to perform various operations on completion candidates and other items.
-;; It extends the capabilities of completion frameworks by offering direct
-;; actions on the candidates.
-(use-package embark
-  :defer t)
-
-
-;;; EMBARK-CONSULT
-;; Embark-Consult provides a bridge between Embark and Consult, ensuring
-;; that Consult commands, like previews, are available when using Embark.
-(use-package embark-consult
-  :hook
-  (embark-collect-mode . consult-preview-at-point-mode)) ;; Enable preview in Embark collect mode.
 
 
 ;;; TREESITTER-AUTO
@@ -639,6 +612,7 @@ Vertico makes the minibuffer appear in a vertical layout.
 Marginalia adds command description next to the commands
 #+begin_src emacs-lisp
 (use-package marginalia
+  :commands (marginalia-mode marginalia-cycle)
   :hook (after-init . marginalia-mode))
 #+end_src
 *** Orderless
@@ -652,7 +626,39 @@ Orderless enables sort of a fuzzy search for searching commands. So "comm magi" 
 								   (eglot (styles orderless))
                                    (eglot-capf (styles orderless))))
   )
-  #+end_src
+#+end_src
+*** Embark
+#+begin_src emacs-lisp
+(use-package embark
+  :defer t
+  :commands (embark-act
+             embark-dwim
+             embark-export
+             embark-collect
+             embark-bindings
+             embark-prefix-help-command))
+
+(use-package embark-consult
+  :ensure t
+  :hook
+  (embark-collect-mode . consult-preview-at-point-mode))(use-package embark-consult
+  :ensure t
+  :hook
+  (embark-collect-mode . consult-preview-at-point-mode))
+#+end_src
+*** Consult
+#+begin_src emacs-lisp
+(use-package consult
+  :defer t
+  :hook (completion-list-mode . consult-preview-at-point-mode)
+  :init
+  ;; Enhance register preview with thin lines and no mode line.
+  (advice-add #'register-preview :override #'consult-register-window)
+
+  ;; Use Consult for xref locations with a preview feature.
+  (setq xref-show-xrefs-function #'consult-xref
+        xref-show-definitions-function #'consult-xref))
+#+end_src
 ** Savehist
 #+begin_src emacs-lisp
 (use-package savehist
@@ -663,7 +669,11 @@ Orderless enables sort of a fuzzy search for searching commands. So "comm magi" 
 #+begin_src emacs-lisp
 (use-package corfu
   :after orderless
-  :hook (after-init . global-corfu-mode)
+  :defer t
+  :commands (corfu-mode global-corfu-mode)
+  :hook ((prog-mode . corfu-mode)
+         (shell-mode . corfu-mode)
+         (eshell-mode . corfu-mode))
   :bind
   (:map corfu-map
         ("TAB" . corfu-next)
@@ -673,25 +683,24 @@ Orderless enables sort of a fuzzy search for searching commands. So "comm magi" 
   :custom
   (corfu-cycle t)           ;; Enable cycling for `corfu-next/previous'
   (corfu-auto t)            ;; Enables auto-completion
-  (corfu-auto-prefix 3)          ;; Minimum length of prefix for auto completion.
-  (corfu-preselect 'prompt) ;; Always preselect the prompt
+  ;; (corfu-auto-prefix 3)          ;; Minimum length of prefix for auto completion.
+  ;; (corfu-preselect 'prompt) ;; Always preselect the prompt
   (corfu-popupinfo-mode t)  ;; Enable popup information
-  (corfu-popupinfo-delay 0.5)    ;; Lower popupinfo delay to 0.5 seconds from 2 seconds
+  ;; (corfu-popupinfo-delay 0.5)    ;; Lower popupinfo delay to 0.5 seconds from 2 seconds
   
   (completion-ignore-case t)
 
   (text-mode-ispell-word-completion nil) ;; Disable Ispell completion
-
-  ;; Sort by input history (no need to modify `corfu-sort-function').
-  (with-eval-after-load 'savehist
-    (corfu-history-mode 1)
-    (add-to-list 'savehist-additional-variables 'corfu-history)))
+  
+  :config
+  (global-corfu-mode))
 #+end_src
 ** Cape
 Cape adds more completions for corfu
 #+begin_src emacs-lisp
 (use-package cape
-  :after corfu
+  :defer t
+  :commands (cape-dabbrev cape-file cape-elisp-block)
   :init
   ;; Add to the global default value of `completion-at-point-functions' which is
   ;; used by `completion-at-point'.  The order of the functions matters, the
@@ -711,7 +720,7 @@ Cape adds more completions for corfu
   (add-to-list 'completion-at-point-functions #'cape-history) ;; Complete from Eshell, Comint or minibuffer history
   ;; (add-to-list 'completion-at-point-functions #'cape-line) ;; Complete entire line from current buffer
   ;; (add-to-list 'completion-at-point-functions #'cape-elisp-symbol) ;; Complete Elisp symbol
-  ;;(add-to-list 'completion-at-point-functions #'cape-tex) ;; Complete Unicode char from TeX command, e.g. \hbar
+  (add-to-list 'completion-at-point-functions #'cape-tex) ;; Complete Unicode char from TeX command, e.g. \hbar
   ;;(add-to-list 'completion-at-point-functions #'cape-sgml) ;; Complete Unicode char from SGML entity, e.g., &alpha
   ;;(add-to-list 'completion-at-point-functions #'cape-rfc1345) ;; Complete Unicode char using RFC 1345 mnemonics
   )
@@ -731,19 +740,6 @@ Cape adds more completions for corfu
   :hook ((emacs-lisp-mode . aggressive-indent-mode)
 		 (lisp-mode . aggressive-indent-mode)))
 #+end_src
-** Yasnippet
-#+begin_src emacs-lisp
-(use-package yasnippet-snippets
-  :hook (prog-mode . yas-minor-mode)) 
-#+end_src
-Modes
-** Markdown Mode
-#+begin_src emacs-lisp
-(use-package markdown-mode
-  :defer t
-  :mode ("README\\.md\\'" . gfm-mode)            ;; Use gfm-mode for README.md files.
-  :init (setq markdown-command "multimarkdown")) ;; Set the Markdown processing command.
-#+end_src
 ** envrc
 envrc automagically loads into direnv
 #+begin_src emacs-lisp
@@ -756,20 +752,51 @@ envrc automagically loads into direnv
   :ensure nil
   :hook (
 		 (nix-ts-mode . eglot-ensure)
-		 (python-ts-mode . eglot-ensure))
+		 (python-ts-mode . eglot-ensure)
+         (go-mode . eglot-ensure))
   :custom
   ;; Good default
   (eglot-events-buffer-size 0) ;; No event buffers (Lsp server logs)
   (eglot-autoshutdown t);; Shutdown unused servers.
   (eglot-report-progress nil) ;; Disable lsp server logs (Don't show lsp messages at the bottom, java)
-
-  (add-to-list 'eglot-server-programs
-               `(nix-ts-mode . ("nixd")))
-  
-  (add-to-list 'eglot-server-programs
-               `(python-mode python-ts-mode) ("pyright-langserver" "--stdio"))
   )
   
+#+end_src
+** Github Copliot
+#+begin_src emacs-lisp
+(use-package copilot
+  :defer t
+  :vc (:url "https://github.com/copilot-emacs/copilot.el"
+            :rev :newest
+                          :branch "main")
+  :hook (prog-mode . copilot-mode)
+  :bind (:map copilot-completion-map
+			  ("<tab>" . 'copilot-accept-completion)
+			  ("TAB" . 'copilot-accept-completion)
+			  ("C-TAB" . 'copilot-accept-completion-by-word)
+			  ("C-<tab>" . 'copilot-accept-completion-by-word)
+			  ("C-n" . 'copilot-next-completion)
+			  ("C-p" . 'copilot-previous-completion))
+  )
+#+end_src
+* Languages
+** python
+Remap the python-mode to python-ts-mode
+#+begin_src emacs-lisp
+(add-to-list 'major-mode-remap-alist '(python-mode . python-ts-mode))
+#+end_src
+** Markdown Mode
+#+begin_src emacs-lisp
+(use-package markdown-mode
+  :defer t
+  :mode ("README\\.md\\'" . gfm-mode)            ;; Use gfm-mode for README.md files.
+  :init (setq markdown-command "multimarkdown")) ;; Set the Markdown processing command.
+#+end_src
+** go-mode
+#+begin_src emacs-lisp
+(use-package go-mode
+  :mode "\\.go\\'"
+  )
 #+end_src
 ** nix-ts-mode
 Enable nix mode for all *.nix files
@@ -807,6 +834,11 @@ Enable nix mode for all *.nix files
   (org-agenda-span 10)
   (org-agenda-start-day "-3d")
   (org-agenda-start-on-weekday nil) ; We don't need to start on a weekday, do we?
+
+  (org-agenda-skip-schedulded-if-done t) ;; Don't show schedulded items, if done
+  (org-agenda-skip-deadline-if-done t) ;; Don't show deadlined items, if done
+  (org-agenda-todo-ignore-scheduled 'future) ;; Don't show schedulded dates in the future
+  (org-agenda-todo-ignore-deadlines 7) ;; Don't show deadlines that are more than 7 days away
 
   (org-return-follows-link t)
   
@@ -853,123 +885,104 @@ Enable nix mode for all *.nix files
 #+begin_src emacs-lisp
 (use-package org-super-agenda
   :after org-agenda
+
+  :config
+  (defvar common-todo-groups
+	'((:name "Important"
+			 :tag "Important"
+			 :priority "A"
+			 :order 6)
+	  (:name "Due Today"
+			 :deadline today
+			 :order 2)
+	  (:name "Due Soon"
+			 :deadline future
+			 :order 8)
+	  (:name "Overdue"
+			 :deadline past
+			 :face error
+			 :order 7)
+	  (:name "Started"
+			 :todo "STRT"
+			 :order 10)
+	  (:name "Waiting"
+			 :todo "WAIT"
+			 :order 10)))
+
   :custom
   (org-super-agenda-header-map nil)
   (org-super-agenda-mode t)
   (org-agenda-custom-commands
-   '(("pd" "private day"
+   '(("d" "Today"
 	  ((agenda "" ((org-agenda-span 'day)
-				  (org-super-agenda-groups
-				   '((:name "Today"
-							:time-grid t
-							:date today
-							:todo "TODAY"
-							:scheduled today
-							:order 1)))))
-	  (todo "" ((org-agenda-overriding-header "")
-				(org-super-agenda-groups
-				 '((:name "Important"
-						  :tag "Important"
-						  :priority "A"
-						  :order 6)
-				   (:name "Due Today"
-						  :deadline today
-						  :order 2)
-				   (:name "Due Soon"
-						  :deadline future
-						  :order 8)
-				   (:name "Overdue"
-						  :deadline past
-						  :face error
-						  :order 7)
-				   (:name "To read"
-						  :tag "read"
-						  :order 30)
-				   (:name "People"
-						  :tag "people"
-						  :order 19)
-				   (:name "Tech"
-						  :tag "tech"
-						  :order 19)
-				   (:name "Waiting"
-						  :todo "WAIT"
-						  :order 20)
-				   )))))
-	  ((org-agenda-tag-filter '("-work" "-gifts"))))
-	 ("pw" "private week"
-	  ((agenda "" ((org-agenda-span 'week)))
-	  (todo "" ((org-agenda-overriding-header "")
-				(org-super-agenda-groups
-				 '((:name "Important"
-						  :tag "Important"
-						  :priority "A"
-						  :order 6)
-				   (:name "Due Today"
-						  :deadline today
-						  :order 2)
-				   (:name "Due Soon"
-						  :deadline future
-						  :order 8)
-				   (:name "Overdue"
-						  :deadline past
-						  :face error
-						  :order 7)
-				   (:name "To read"
-						  :tag "read"
-						  :order 30)
-				   (:name "People"
-						  :tag "people"
-						  :order 19)
-				   (:name "Tech"
-						  :tag "tech"
-						  :order 19)
-				   (:name "Waiting"
-						  :todo "WAIT"
-						  :order 20)
-				   )))))
-	  ((org-agenda-tag-filter '("-work" "-gifts"))))
-	 ("w" "work"
-	  ((agenda "" ((org-agenda-files '("~/persist/org/work.org"))
-				   (org-agenda-span 'day)
 				   (org-super-agenda-groups
 					'((:name "Today"
 							 :time-grid t
 							 :date today
 							 :todo "TODAY"
 							 :scheduled today
-							 :order 1)))))
+							 :order 1))
+                    (:name "Started"
+			               :todo "STRT"
+			               :order 10)
+	                (:name "Waiting"
+			               :todo "WAIT"
+			               :order 10)))))
+	  ((org-agenda-tag-filter '("-gifts"))))
+	 ("pw" "private week"
+	  ((agenda "" ((org-agenda-span 'week)))
+	   (todo "" ((org-agenda-overriding-header "")
+                 (org-super-agenda-groups
+                  (append common-todo-groups
+					      '((:name "People"
+						           :tag "people"
+						           :order 19)
+					        (:name "Tech"
+						           :tag "tech"
+						           :order 19)
+					        ))))))
+	  ((org-agenda-tag-filter '("-work" "-gifts"))))
+     ("w" "work"
+	  ((agenda "" ((org-agenda-files '("~/persist/org/work.org"))
+				   (org-agenda-span 'day)
+				   (org-super-agenda-groups
+				    '((:name "Today"
+						     :time-grid t
+						     :date today
+						     :todo "TODAY"
+						     :scheduled today
+						     :order 1)))))
 	   (todo "" ((org-agenda-files '("~/persist/org/work.org"))
-				 (org-agenda-overriding-header "")
-				 (org-super-agenda-groups
+			     (org-agenda-overriding-header "")
+			     (org-super-agenda-groups
 				  '((:name "Important"
 						   :tag "Important"
 						   :priority "A"
 						   :order 6)
-					(:name "Due Today"
+				    (:name "Due Today"
 						   :deadline today
 						   :order 2)
-					(:name "Due Soon"
+				    (:name "Due Soon"
 						   :deadline future
 						   :order 8)
-					(:name "Overdue"
+				    (:name "Overdue"
 						   :deadline past
 						   :face error
 						   :order 7)
-					(:name "To read"
+				    (:name "To read"
 						   :tag "read"
 						   :order 30)
-					(:name "Waiting"
+				    (:name "Waiting"
 						   :todo "WAIT"
 						   :order 20)
-					))))))
-	 ("g" "gifts"
+				    ))))))
+     ("g" "gifts"
 	  ((tags-todo "+gifts" ((org-super-agenda-groups '((:auto-outline-path t))))))
 	  )
-	 )
+     )
    )
   )
 #+end_src
-
 *** org-superstar
 Transforms the * into nice symbols
 #+begin_src emacs-lisp
@@ -996,9 +1009,9 @@ Allow for expanding of src blocks automagically with "<s TAB " or "<el TAB" for 
 #+END_SRC
 *** Code Blocks
 #+begin_src emacs-lisp
-  (use-package ob-python :ensure nil)
+(use-package ob-python :ensure nil)
 
-  (use-package org
+(use-package org
   :config
   (setq org-confirm-babel-evaluate nil) ;; don't ask for permission to run
   (setq org-src-window-setup 'current-window)
@@ -1011,39 +1024,67 @@ Allow for expanding of src blocks automagically with "<s TAB " or "<el TAB" for 
 *** org-re-reveal
 #+begin_src emacs-lisp
 (use-package org-re-reveal
+  :defer t
   :config
   (setq org-re-reveal-revealjs-version "4")
   (setq org-re-reveal-history t))
 (use-package oer-reveal)
 #+end_src
-*** Notmuch (email)
+*** email
 #+begin_src emacs-lisp
-(use-package notmuch
-  :defer t
-  :commands notmuch-hello
+(use-package mu4e
+  :ensure nil
+  :custom
+  
+  (mu4e-change-filenames-when-moving t)
+
+  (mu4e-get-mail-command (concat (executable-find "mbsync") " personal")) 
+
+  (sendmail-program (executable-find "msmtp"))
+  (message-sendmail-envelope-from 'header)
+  (send-mail-function 'smtpmail-send-it) 
+  (message-sendmail-f-is-evil t)
+  (send-mail-function 'message-send-mail-with-sendmail
+					  message-send-mail-function 'message-send-mail-with-sendmail)
+
+  (mu4e-attachment-dir "~/Downloads")
+
+  (mu4e-sent-folder "/Sent")
+  (mu4e-drafts-folder "/Drafts")
+  (mu4e-trash-folder "/Trash")
+  (mu4e-refile-folder "/Archive")
+
+  (mu4e-confirm-quit nil) ;; Yes, I want to quit!
+  (mu4e-headers-thread-single-orphan-prefix '("─>" . "─▶"))
+  (mu4e-headers-thread-orphan-prefix        '("┬>" . "┬▶ "))
+  (mu4e-headers-thread-connection-prefix    '("│ " . "│ "))
+  (mu4e-headers-thread-first-child-prefix   '("├>" . "├▶"))
+  (mu4e-headers-thread-child-prefix         '("├>" . "├▶"))
+  (mu4e-headers-thread-last-child-prefix    '("└>" . "╰▶"))
+
+  (mu4e-trash-without-flag t) ;; Don't flag trashed emails with trash
+
   :config
-  (message-sendmail-envelope-from 'header) ;; This tells msmpt to which address this mail was send and sets it as the sender
-  :bind (("C-c m" . notmuch-hello)))
+  (add-to-list 'mu4e-bookmarks
+			   '( :name "Inbox"
+				  :key  ?i
+				  :query "maildir:/Inbox"))
+  )
 #+end_src
-** python
-Remap the python-mode to python-ts-mode
+* Elfeed
 #+begin_src emacs-lisp
-(add-to-list 'major-mode-remap-alist '(python-mode . python-ts-mode))
-#+end_src
-** Github Copliot
-#+begin_src emacs-lisp
-(use-package copilot
+(use-package elfeed
   :defer t
-  :vc (:url "https://github.com/copilot-emacs/copilot.el"
-            :rev :newest
-            :branch "main")
-  :hook (prog-mode . copilot-mode)
-  :bind 
-  ("<tab>" . 'copilot-accept-completion)
-  ("TAB" . 'copilot-accept-completion)
-  ("C-TAB" . 'copilot-accept-completion-by-word)
-  ("C-<tab>" . 'copilot-accept-completion-by-word)
-  ("C-n" . 'copilot-next-completion)
-  ("C-p" . 'copilot-previous-completion)
+  :commands (elfeed))
+
+(use-package elfeed-protocol
+  :after elfeed
+  :config
+  (elfeed-protocol-enable)
+  :custom
+  (elfeed-use-curl t)
+  (elfeed-protocol-feeds '(("fever+https://alex@rss.mytbu.de"
+                            :api-url "https://rss.mytbu.de/fever/"
+                            :password-file "~/.config/sops-nix/secrets/local-password")))
   )
 #+end_src
