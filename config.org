@@ -631,6 +631,8 @@ Enables Nerd icons
 Vertico makes the minibuffer appear in a vertical layout.
 #+begin_src emacs-lisp
 (use-package vertico
+  :defer t
+  :commands vertico-mode
   :hook (after-init . vertico-mode))
 #+end_src
 *** Marginalia
