@@ -14,7 +14,6 @@
   - [[#evil-mode][Evil Mode]]
   - [[#undo-tree][Undo tree]]
   - [[#doom-modeline][doom-modeline]]
-  - [[#neotree][neotree]]
   - [[#which-key][Which Key]]
   - [[#rainbow-delimitiers][Rainbow Delimitiers]]
   - [[#nerd-icons][Nerd Icons]]
@@ -589,19 +588,8 @@ Modern, cool looking line
   :hook
   (after-init . doom-modeline-mode))
 #+end_src
-** neotree
-Neotree is a file tree explorer.
-#+begin_src emacs-lisp
-(use-package neotree
-  :custom
-  (neo-show-hidden-files t)                ;; By default shows hidden files (toggle with H)
-  (neo-theme 'nerd-icons)                  ;; Set the default theme for Neotree to 'nerd-icons' for a visually appealing look.
-  (neo-vc-integration '(face char))        ;; Enable VC integration to display file states with faces (color coding) and characters (icons).
-  :defer t)                                 ;; Load the package only when needed to improve startup time.
-#+end_src
 ** Which Key
 Which-key display the possible key bindings after a short delay
-
 #+begin_src emacs-lisp
 (use-package which-key
   :ensure nil     ;; This is built-in, no need to fetch it.
