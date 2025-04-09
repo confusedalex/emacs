@@ -98,8 +98,6 @@ Use Doom Emacs Themes, because they are awesome.
 (use-package doom-themes
   :config
   (load-theme 'doom-gruvbox t)
-  ;; Enable custom neotree theme (nerd-icons must be installed!)
-  (doom-themes-neotree-config)
   ;; Corrects (and improves) org-mode's native fontification.
   (doom-themes-org-config))
  #+end_src
@@ -231,11 +229,6 @@ Diff-HL provides marking for unstaged, uncommited, changed, added, removed lines
   "x" 'kill-current-buffer ;; Kill current buffer
   )
 
-(defvar-keymap prefix-neotree-map
-  :doc "NeoTree command for file exploration"
-  "e" 'neotree-toggle
-)
-
 (defvar-keymap prefix-compute-map
   :doc "Compute"
   "b r" 'elisp-eval-region-or-buffer ;; Reload config
@@ -249,7 +242,6 @@ Diff-HL provides marking for unstaged, uncommited, changed, added, removed lines
   :doc "My prefix key map."
   "b" prefix-buffer-map
   "c" prefix-compute-map
-  "e" prefix-neotree-map
   "f" prefix-find-files-map
   "g" prefix-magit-map
   "m" prefix-mode-map
