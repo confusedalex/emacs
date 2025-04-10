@@ -694,7 +694,7 @@ Enable nix mode for all *.nix files
 #+begin_src emacs-lisp
 (use-package org-super-agenda
   :after org-agenda
-
+  :defer t
   :config
   (defvar common-todo-groups
 	'((:name "Important"
