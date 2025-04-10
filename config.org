@@ -320,16 +320,7 @@ Diff-HL provides marking for unstaged, uncommited, changed, added, removed lines
 (use-package evil-surround
   :after evil-collection
   :config
-  (evil-define-command evil-mini-surround (char)
-	(interactive (evil-surround-input-char))
-	(call-interactively
-	 (pcase char
-       (?a #'evil-surround-region)
-       (?r #'evil-surround-change)
-       (?d #'evil-surround-delete))))
   
-  (evil-define-key 'normal 'evil-surround-mode-map "s" 'evil-mini-surround)
-
   ;; Remove the spacing that would be inserted
   ;; see https://github.com/emacs-evil/evil-surround/commit/205c650d7fbfdbe2b917e1d90e701633a55e89df#r106953057
   (add-to-list 'evil-surround-pairs-alist '(?\( . ("(" . ")")))
