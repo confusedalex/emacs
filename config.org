@@ -667,7 +667,7 @@ Enable nix mode for all *.nix files
 #+begin_src emacs-lisp
 (setq org-capture-templates
       '(
-	    ("p" "Personal")
+	("p" "Personal")
         ("pt" "Personal todo" entry
          (file+headline "inbox.org" "todos")
          "* TODO %?\n%i" :prepend t)
@@ -685,8 +685,8 @@ Enable nix mode for all *.nix files
          )
         ("l" "Log Entry" entry (file+olp+datetree "daybook.org") "* %? %T")
         ("j" "Journal entry" entry (file+datetree "journal.org") "* %(format-time-string \"%H:%M\") \n%?")
-	    ("b" "Bookmark" entry (file+headline "notes.org" "Bookmarks")
-	     "* %? \n:PROPERTIES:\n:CREATED: %U\n:END:\n")
+	("b" "Bookmark" entry (file+headline "notes.org" "Bookmarks")
+	 "* %? \n:PROPERTIES:\n:CREATED: %U\n:END:\n")
         ("e" "Email capture" entry (file+headline "inbox.org" "todos") "* TODO %a"))
       )
 #+end_src
