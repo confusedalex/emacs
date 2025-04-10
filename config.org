@@ -885,11 +885,43 @@ Allow for expanding of src blocks automagically with "<s TAB " or "<el TAB" for 
 				  :query "maildir:/Inbox"))
   )
 #+end_src
+*** ox-zola
+#+begin_src emacs-lisp
+(use-package ox-hugo)
+(use-package ox-zola
+  :vc (:url "https://github.com/gicrisf/ox-zola"
+            :rev :newest
+            :branch "main")
+  :after ox
+  :config
+  (require 'ox-hugo))
+#+end_src
+** web-mode
+#+begin_src emacs-lisp
+(use-package web-mode
+  :defer t
+  :mode
+  (("\\.html?\\'" . web-mode)
+   ("\\.phtml\\'" . web-mode)
+   ("\\.vue\\'" . web-mode)
+   ("\\.php\\'" . web-mode)
+   ("\\.tpl\\'" . web-mode)
+   ("\\.[agj]sp\\'" . web-mode)
+   ("\\.as[cp]x\\'" . web-mode)
+   ("\\.erb\\'" . web-mode)
+   ("\\.mustache\\'" . web-mode)
+   ("\\.djhtml\\'" . web-mode))
+  :hook
+  (web-mode . eglot-ensure)
+  )
+#+end_src
 * Elfeed
 #+begin_src emacs-lisp
 (use-package elfeed
   :defer t
-  :commands (elfeed))
+  :commands (elfeed)
+  :bind
+  ("C-c e" . elfeed))
 
 (use-package elfeed-protocol
   :after elfeed
