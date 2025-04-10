@@ -873,6 +873,9 @@ Allow for expanding of src blocks automagically with "<s TAB " or "<el TAB" for 
 
   (mu4e-trash-without-flag t) ;; Don't flag trashed emails with trash
 
+  (mail-user-agent 'mu4e-user-agent) ;; Tell emacs that mu4e is our default mail program
+  (read-mail-command 'mu4e) ;; mu4e is also our default mail reading program. I know, shocking
+
   :config
   (add-to-list 'mu4e-bookmarks
 			   '( :name "Inbox"
