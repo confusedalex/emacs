@@ -499,10 +499,8 @@ Orderless enables sort of a fuzzy search for searching commands. So "comm magi" 
   :custom
   (corfu-cycle t)           ;; Enable cycling for `corfu-next/previous'
   (corfu-auto t)            ;; Enables auto-completion
-  ;; (corfu-auto-prefix 3)          ;; Minimum length of prefix for auto completion.
-  ;; (corfu-preselect 'prompt) ;; Always preselect the prompt
   (corfu-popupinfo-mode t)  ;; Enable popup information
-  ;; (corfu-popupinfo-delay 0.5)    ;; Lower popupinfo delay to 0.5 seconds from 2 seconds
+  (corfu-auto-delay 0.2)    ;; lower delay for completion
   
   (completion-ignore-case t)
 
@@ -569,7 +567,7 @@ envrc automagically loads into direnv
   (eglot-autoshutdown t);; Shutdown unused servers.
   (eglot-report-progress nil) ;; Disable lsp server logs (Don't show lsp messages at the bottom, java)
   )
-  
+
 #+end_src
 ** Github Copliot
 #+begin_src emacs-lisp
