@@ -577,16 +577,21 @@ envrc automagically loads into direnv
   :defer t
   :vc (:url "https://github.com/copilot-emacs/copilot.el"
             :rev :newest
-                          :branch "main")
+            :branch "main")
   :hook (prog-mode . copilot-mode)
   :bind (:map copilot-completion-map
-			  ("<tab>" . 'copilot-accept-completion)
-			  ("TAB" . 'copilot-accept-completion)
-			  ("C-TAB" . 'copilot-accept-completion-by-word)
-			  ("C-<tab>" . 'copilot-accept-completion-by-word)
-			  ("C-n" . 'copilot-next-completion)
-			  ("C-p" . 'copilot-previous-completion))
+	      ("<tab>" . 'copilot-accept-completion)
+	      ("TAB" . 'copilot-accept-completion)
+	      ("C-TAB" . 'copilot-accept-completion-by-word)
+	      ("C-<tab>" . 'copilot-accept-completion-by-word)
+	      ("C-n" . 'copilot-next-completion)
+	      ("C-p" . 'copilot-previous-completion))
   )
+#+end_src
+** tramp
+#+begin_src emacs-lisp
+(use-package tramp
+  :ensure nil)
 #+end_src
 * Languages
 ** python
