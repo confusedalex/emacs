@@ -101,6 +101,11 @@ Use Doom Emacs Themes, because they are awesome.
   ;; Corrects (and improves) org-mode's native fontification.
   (doom-themes-org-config))
  #+end_src
+
+* Transparency
+#+begin_src emacs-lisp
+(add-to-list 'default-frame-alist '(alpha-background . 92))
+#+end_src
 * Editor
 ** format-all
 Format-All allows us to format nearly all file types with their own formatters.
