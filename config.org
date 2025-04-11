@@ -571,8 +571,23 @@ envrc automagically loads into direnv
   (eglot-events-buffer-size 0) ;; No event buffers (Lsp server logs)
   (eglot-autoshutdown t);; Shutdown unused servers.
   (eglot-report-progress nil) ;; Disable lsp server logs (Don't show lsp messages at the bottom, java)
+  :config
+  (add-to-list 'eglot-server-programs
+               '(vue-mode . ("vue-language-server"
+                             "--stdio"
+                             :initializationOptions
+                             (
+                              :typescript (:tsdk "./node_modules/typescript/lib")
+                              :vue (:hybridMode :json-false)
+                              ))))
   )
 
+(use-package eglot-booster
+  :vc (:url "https://github.com/jdtsmith/eglot-booster"
+       :rev :newest
+       :branch "main")
+  :after eglot
+  :config	(eglot-booster-mode))
 #+end_src
 ** Github Copliot
 #+begin_src emacs-lisp
