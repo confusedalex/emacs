@@ -596,7 +596,6 @@ envrc automagically loads into direnv
   :vc (:url "https://github.com/copilot-emacs/copilot.el"
             :rev :newest
             :branch "main")
-  :hook (prog-mode . copilot-mode)
   :bind (:map copilot-completion-map
 	      ("<tab>" . 'copilot-accept-completion)
 	      ("TAB" . 'copilot-accept-completion)
