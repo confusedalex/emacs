@@ -937,6 +937,11 @@ Allow for expanding of src blocks automagically with "<s TAB " or "<el TAB" for 
   (web-mode . eglot-ensure)
   )
 #+end_src
+** vuejs
+#+begin_src emacs-lisp
+(define-derived-mode vue-mode web-mode "Vue")
+(add-to-list 'auto-mode-alist '("\\.vue\\'" . vue-mode))
+#+end_src
 * Elfeed
 #+begin_src emacs-lisp
 (use-package elfeed
