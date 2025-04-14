@@ -914,18 +914,15 @@ Allow for expanding of src blocks automagically with "<s TAB " or "<el TAB" for 
   :vc (:url "https://github.com/gicrisf/ox-zola"
             :rev :newest
             :branch "main")
-  :after ox
-  :config
-  (require 'ox-hugo))
+  :after ox)
 #+end_src
 ** web-mode
 #+begin_src emacs-lisp
 (use-package web-mode
   :defer t
-  :mode
+ :mode
   (("\\.html?\\'" . web-mode)
    ("\\.phtml\\'" . web-mode)
-   ("\\.vue\\'" . web-mode)
    ("\\.php\\'" . web-mode)
    ("\\.tpl\\'" . web-mode)
    ("\\.[agj]sp\\'" . web-mode)
