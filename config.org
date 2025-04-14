@@ -949,10 +949,59 @@ Allow for expanding of src blocks automagically with "<s TAB " or "<el TAB" for 
   :after elfeed
   :config
   (elfeed-protocol-enable)
+
+  (defun elfeed-protocol-fever-sync-unread-stat ()
+    (interactive)
+    (mark-whole-buffer)
+    (cl-loop for entry in (elfeed-search-selected)
+             do (elfeed-untag-1 entry 'unread))
+    (elfeed-protocol-fever-reinit "fever+https://alex@rss.mytbu.de"))
+  
   :custom
   (elfeed-use-curl t)
+  ;; Change the db directory to a custom one
+  ;; 'cause the default in "~./elfeed" and
+  ;; I like a clean home directory :)
+  (elfeed-db-directory "~/.emacs.d/elfeed")
+  
+  (elfeed-protocol-fever-update-unread-only t) ;; Only fetch unread articles
   (elfeed-protocol-feeds '(("fever+https://alex@rss.mytbu.de"
                             :api-url "https://rss.mytbu.de/fever/"
                             :password-file "~/.config/sops-nix/secrets/local-password")))
   )
+#+end_src
+* test
+#+begin_src emacs-lisp
+(with-eval-after-load 'evil
+  (defun find-nearest-quote ()
+    (interactive)
+    (let ((p (point))
+          (beg nil)
+          (end nil)
+          (quote-char nil))
+
+      (save-excursion
+        (when (search-backward "\"" nil t)
+          (setq end (point))))
+      
+      (save-excursion
+        (when (search-forward "\"" nil t)
+          (setq beg (1- (point)))))
+
+      (if (or (not beg) (< (abs (- p beg)) (abs (- p end))))
+          (progn
+            (setq quote-char (char-to-string (char-after beg)))
+            (setq end nil)
+            (goto-char beg))
+            (setq quote-char (char-to-string (char-after end)))
+        (setq beg nil)
+        (goto-char end))
+      ))
+
+    (defun goto-nearest-quote ()
+      (interactive)
+      (goto-char (find-nearest-quote)))
+
+    (global-set-key (kbd "C-c t") 'find-nearest-quote)
+    ) 
 #+end_src
