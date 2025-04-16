@@ -852,6 +852,17 @@ Allow for expanding of src blocks automagically with "<s TAB " or "<el TAB" for 
   (setq org-src-tab-acts-natively t)
   (setq org-edit-src-content-indentation 0))
 #+end_src
+**** ob-mermaid
+#+begin_src emacs-lisp
+(use-package ob-mermaid
+  :custom
+  (ob-mermaid-cli-path (executable-find "mmdc"))
+  )
+
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((mermaid . t)))
+#+end_src
 *** org-re-reveal
 #+begin_src emacs-lisp
 (use-package org-re-reveal
