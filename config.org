@@ -675,8 +675,8 @@ Enable nix mode for all *.nix files
   
   (org-hide-leading-stars t)
   (org-refile-targets
-   '((nil :maxlevel . 3)
-     (org-agenda-files :maxlevel . 3)) ;; add all agenda files as refile targets
+   '((nil :maxlevel . 5)
+     (org-agenda-files :maxlevel . 5)) ;; add all agenda files as refile targets
    ;; Without this, completers like ivy/helm are only given the first level of
    ;; each outline candidates. i.e. all the candidates under the "Tasks" heading
    ;; are just "Tasks/". This is unhelpful. We want the full path to each refile
