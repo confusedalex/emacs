@@ -717,6 +717,17 @@ Enable nix mode for all *.nix files
         :rating:   %^{Rating}
         :END:\n%?"
          )
+        ("i" "Item" entry (file "hardware.org")
+         "* %^{Item name}
+            %^{CUSTOM_ID}p
+            %^{LOCATION}p
+            %^{DESCRIPTION}p
+            %^{PURCHASE_DATE}p
+            %^{PRICE}p
+            %^{SERIAL_NUMBER}p
+            %^{LENDING}p
+            %^{LEND_DATE}p 
+         ")
         ("L" "Log Entry" entry (file+olp+datetree "daybook.org") "* %? %T")
         ("j" "Journal entry" entry (file+datetree "journal.org") "* %(format-time-string \"%H:%M\") \n%?")
 	("b" "Bookmark" entry (file+headline "notes.org" "Bookmarks")
