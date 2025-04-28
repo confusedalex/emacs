@@ -577,9 +577,21 @@ envrc automagically loads into direnv
                              "--stdio"
                              :initializationOptions
                              (
-                              :typescript (:tsdk "./node_modules/typescript/lib")
-                              :vue (:hybridMode :json-false)
-                              ))))
+                              :typescript (:tsdk "./node_modules/typescript/lib"
+                                                 :languageFeatures (:completion
+                                                                    (:defaultTagNameCase "both"
+                                                                                         :defaultAttrNameCase "kebabCase"
+                                                                                         :getDocumentNameCasesRequest nil
+                                                                                         :getDocumentSelectionRequest nil)
+                                                                    :diagnostics
+                                                                    (:getDocumentVersionRequest nil))
+                                                 :documentFeatures (:documentFormatting
+                                                                    (:defaultPrintWidth 100
+                                                                                        :getDocumentPrintWidthRequest nil)
+                                                                    :documentSymbol t
+                                                                    :documentColor t)))
+                             ;; :vue (:hybridMode :json-false)
+                             )))
   )
 
 (use-package eglot-booster
