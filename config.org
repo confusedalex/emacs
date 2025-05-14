@@ -22,6 +22,7 @@
 
   :custom
   (auto-save-default nil)                         ;; Disable automatic saving of buffers.
+  (make-backup-files nil)                         ;; Don't create backup files!
   (delete-by-moving-to-trash t)                   ;; Move deleted files to the trash instead of permanently deleting them.
   (delete-selection-mode 1)                       ;; Enable replacing selected text with typed text.
   (inhibit-startup-message t)                     ;; Disable the startup message when Emacs launches.
