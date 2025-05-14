@@ -434,6 +434,8 @@ Orderless enables sort of a fuzzy search for searching commands. So "comm magi" 
   (org-agenda-todo-ignore-deadlines 7) ;; Don't show deadlines that are more than 7 days away
 
   (org-return-follows-link t)
+
+  (org-export-with-toc nil)
   
   (org-hide-leading-stars t)
   (org-refile-targets
@@ -465,6 +467,9 @@ Orderless enables sort of a fuzzy search for searching commands. So "comm magi" 
      ("@errands" . ?r))
    )
   )
+
+(use-package calfw)
+(use-package calfw-org)
 #+end_src
 *** Capture Templates
 #+begin_src emacs-lisp
@@ -472,10 +477,10 @@ Orderless enables sort of a fuzzy search for searching commands. So "comm magi" 
       '(
 	("p" "Personal")
         ("pt" "Personal todo" entry
-         (file+headline "inbox.org" "todos")
+         (file+headline "notes.org" "Inbox")
          "* TODO %?\n%i" :prepend t)
         ("pn" "Personal notes" entry
-         (file+headline "inbox.org" "notes")
+         (file+headline "notes.org" "Inbox")
          "* %u %?\n%i" :prepend t)
         ("B" "Book" entry (file "books.org")
          "** TODO %^{ Title }
@@ -501,7 +506,8 @@ Orderless enables sort of a fuzzy search for searching commands. So "comm magi" 
         ("j" "Journal entry" entry (file+datetree "journal.org") "* %(format-time-string \"%H:%M\") \n%?")
 	("b" "Bookmark" entry (file+headline "notes.org" "Bookmarks")
 	 "* %? \n:PROPERTIES:\n:CREATED: %U\n:END:\n")
-        ("e" "Email capture" entry (file+headline "inbox.org" "todos") "* TODO %a"))
+        ("e" "Email capture" entry (file+headline "notes.org" "Inbox") "* TODO %a")
+	("a" "Appointment" entry (file+headline "notes.org" "Events") "* %? %^t"))
       )
 #+end_src
 *** super-agenda
@@ -564,7 +570,7 @@ Orderless enables sort of a fuzzy search for searching commands. So "comm magi" 
 						           :tag "tech"
 						           :order 19)
 					        ))))))
-	  ((org-agenda-tag-filter '("-work" "-gifts"))))
+	  ((org-agenda-tag-filter '("-@work" "-gifts"))))
      ("w" "work"
 	  ((agenda "" ((org-agenda-files '("~/persist/org/work.org"))
 				   (org-agenda-span 'day)
