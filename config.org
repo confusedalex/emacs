@@ -357,11 +357,13 @@ Orderless enables sort of a fuzzy search for searching commands. So "comm magi" 
 #+begin_src emacs-lisp
 (use-package lsp-mode
   :init
-  (setq lsp-keymap-prefix "C-l")
+  (setq lsp-keymap-prefix "C-c l")
   :hook (
          (nix-ts-mode . lsp)
 	 (python-ts-mode . lsp)
          (lsp-mode . lsp-enable-which-key-integration))
+  :custom
+  (lsp-use-plists t)
   :commands lsp)
 
 ;; optionally
