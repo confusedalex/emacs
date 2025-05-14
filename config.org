@@ -389,6 +389,13 @@ Orderless enables sort of a fuzzy search for searching commands. So "comm magi" 
   :commands format-all-mode
   :hook (prog-mode . format-all-mode))
 #+end_src
+** smartparens
+#+begin_src emacs-lisp
+(use-package smartparens
+  :hook (prog-mode text-mode markdown-mode) ;; add `smartparens-mode` to these hooks
+  :config
+  (require 'smartparens-config))
+#+end_src
 * Languages
 ** Org Mode
 #+begin_src emacs-lisp
