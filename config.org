@@ -382,6 +382,13 @@ Orderless enables sort of a fuzzy search for searching commands. So "comm magi" 
   (treesit-auto-add-to-auto-mode-alist 'all)
   (global-treesit-auto-mode))
 #+end_src
+** format-all
+#+begin_src emacs-lisp
+(use-package format-all
+  :defer t
+  :commands format-all-mode
+  :hook (prog-mode . format-all-mode))
+#+end_src
 * Languages
 ** Org Mode
 #+begin_src emacs-lisp
