@@ -158,6 +158,12 @@ Orderless enables sort of a fuzzy search for searching commands. So "comm magi" 
   (setq xref-show-xrefs-function #'consult-xref
         xref-show-definitions-function #'consult-xref))
 #+end_src
+** dashboard
+#+begin_src emacs-lisp
+(use-package dashboard
+  :config
+  (dashboard-setup-startup-hook))
+#+end_src
 * Editor
 ** Keybinds
 #+begin_src emacs-lisp
