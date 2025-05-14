@@ -92,7 +92,6 @@ First we gonne install some nice themes
   (dired-mode . nerd-icons-dired-mode))
 #+end_src
 ** minibuffer
-** Minibuffer
 *** Vertico
 Vertico makes the minibuffer appear in a vertical layout.
 #+begin_src emacs-lisp
