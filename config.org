@@ -730,6 +730,22 @@ Allow for expanding of src blocks automagically with "<s TAB " or "<el TAB" for 
 (use-package nix-ts-mode
   :mode "\\.nix\\'")
 #+end_src
+* web-mode
+#+begin_src emacs-lisp
+(use-package web-mode
+  :defer t
+  :hook (web-mode . lsp)
+  :mode
+  (("\\.phtml\\'" . web-mode)
+   ("\\.php\\'" . web-mode)
+   ("\\.tpl\\'" . web-mode)
+   ("\\.[agj]sp\\'" . web-mode)
+   ("\\.as[cp]x\\'" . web-mode)
+   ("\\.erb\\'" . web-mode)
+   ("\\.mustache\\'" . web-mode)
+   ("\\.vue\\'" . web-mode)
+   ("\\.djhtml\\'" . web-mode)))
+#+end_src
 * evil Mode
 #+BEGIN_SRC emacs-lisp
 (use-package evil
