@@ -700,6 +700,17 @@ Allow for expanding of src blocks automagically with "<s TAB " or "<el TAB" for 
 				  :query "maildir:/Inbox"))
   )
 #+end_src
+*** caldav
+#+begin_src emacs-lisp
+(use-package org-caldav
+  :custom
+  (org-caldav-url "https://cloud.mytbu.de/remote.php/dav/calendars/alex")
+  (org-caldav-calendar-id "org")
+  (org-caldav-inbox "~/persist/org/events.org")
+  (org-caldav-files nil)
+  (org-icalendar-timezone "Europe/Berlin")
+  )
+#+end_src
 ** nix-ts
 #+begin_src emacs-lisp
 (use-package nix-ts-mode
