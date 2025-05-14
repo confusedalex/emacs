@@ -749,15 +749,16 @@ Allow for expanding of src blocks automagically with "<s TAB " or "<el TAB" for 
 * evil Mode
 #+BEGIN_SRC emacs-lisp
 (use-package evil
+  :hook (after-init . evil-mode)
   :custom
   (evil-want-C-u-scroll t)
   (evil-want-keybinding nil)
   (evil-undo-system 'undo-redo)
-  :config
   ;; Set the leader key to space for easier access to custom commands.
-  (setq evil-want-leader t)
-  (setq evil-leader/in-all-states t)  ;; Make the leader key available in all states.
-  (setq evil-want-fine-undo t)        ;; Evil uses finer grain undoing steps
+  (evil-want-leader t)
+  (evil-leader/in-all-states t)  ;; Make the leader key available in all states.
+  (evil-want-fine-undo t)        ;; Evil uses finer grain undoing steps
+  :config
 
   (evil-define-key '(normal motion visual) 'global
     (kbd "RET") nil ; unset RET to use with org-return-follows-link
@@ -775,8 +776,9 @@ Allow for expanding of src blocks automagically with "<s TAB " or "<el TAB" for 
       (interactive)
       (if (use-region-p)
 	  (comment-or-uncomment-region (region-beginning) (region-end)))))
-  
-  (evil-mode 1))
+
+  (global-unset-key (kbd "M-H"))
+  )
 
 (use-package evil-collection
   :after evil
@@ -797,7 +799,8 @@ Allow for expanding of src blocks automagically with "<s TAB " or "<el TAB" for 
 #+begin_src emacs-lisp
 (use-package evil-org
   :after org
-  :hook (org-mode . evil-org-mode)
+  :hook
+  (org-mode . evil-org-mode)
   :config
   (require 'evil-org-agenda)
   (evil-org-agenda-set-keys))
