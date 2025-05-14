@@ -175,6 +175,8 @@ Orderless enables sort of a fuzzy search for searching commands. So "comm magi" 
   "f" 'consult-fd
   "g" 'consult-ripgrep
   "h" 'consult-info
+  "r" 'consult-recent-file
+  "t" 'consult-theme
 ) 
 
 (defvar-keymap prefix-org-map
@@ -185,7 +187,6 @@ Orderless enables sort of a fuzzy search for searching commands. So "comm magi" 
 
   ;; Files
   "b" '(lambda() (interactive)(find-file "~/persist/org/books.org"))
-  "i" '(lambda() (interactive)(find-file "~/persist/org/inbox.org"))
   "j" '(lambda() (interactive)(find-file "~/persist/org/journal.org"))
   "n" '(lambda() (interactive)(find-file "~/persist/org/notes.org"))
   "w" '(lambda() (interactive)(find-file "~/persist/org/work.org"))
