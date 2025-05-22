@@ -321,8 +321,8 @@ Orderless enables sort of a fuzzy search for searching commands. So "comm magi" 
   ;; first function returning a result wins.  Note that the list of buffer-local
   ;; completion functions takes precedence over the global list.
   ;; The functions that are added later will be the first in the list
-
-  (advice-add 'eglot-completion-at-point :around #'cape-wrap-buster)
+  
+  (advice-add #'lsp-completion-at-point :around #'cape-wrap-noninterruptible)
 
   (add-to-list 'completion-at-point-functions #'cape-dabbrev) ;; Complete word from current buffers
   (add-to-list 'completion-at-point-functions #'cape-dict) ;; Dictionary completion
@@ -359,13 +359,15 @@ Orderless enables sort of a fuzzy search for searching commands. So "comm magi" 
 #+begin_src emacs-lisp
 (use-package lsp-mode
   :init
-  (setq lsp-keymap-prefix "C-c l")
+  (setq lsp-use-plists t)
+  :custom
+  ;; (lsp-completion-provider :none)       ; Using Corfu as the provider
+  (lsp-keymap-prefix "C-c l")           ; Prefix for LSP actions
+  (lsp-log-io nil)                    
   :hook (
          (nix-ts-mode . lsp)
 	 (python-ts-mode . lsp)
          (lsp-mode . lsp-enable-which-key-integration))
-  :custom
-  (lsp-use-plists t)
   :commands lsp)
 
 ;; optionally
