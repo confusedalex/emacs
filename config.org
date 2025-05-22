@@ -485,6 +485,13 @@ Orderless enables sort of a fuzzy search for searching commands. So "comm magi" 
 (use-package calfw)
 (use-package calfw-org)
 #+end_src
+*** org-cliplink
+Cliplink allows instantly capturing from the clipboard and fetching the URL title
+#+begin_src emacs-lisp
+(use-package org-cliplink
+  :defer t
+  :commands (org-cliplink-capture))
+#+end_src
 *** Capture Templates
 #+begin_src emacs-lisp
 (setq org-capture-templates
@@ -519,7 +526,7 @@ Orderless enables sort of a fuzzy search for searching commands. So "comm magi" 
         ("L" "Log Entry" entry (file+olp+datetree "daybook.org") "* %? %T")
         ("j" "Journal entry" entry (file+datetree "journal.org") "* %(format-time-string \"%H:%M\") \n%?")
 	("b" "Bookmark" entry (file+headline "notes.org" "Bookmarks")
-	 "* %? \n:PROPERTIES:\n:CREATED: %U\n:END:\n")
+	 "* %(org-cliplink-capture) \n:PROPERTIES:\n:CREATED: %U\n:END:\n")
         ("e" "Email capture" entry (file+headline "notes.org" "Inbox") "* TODO %a")
 	("a" "Appointment" entry (file+headline "notes.org" "Events") "* %? %^t"))
       )
