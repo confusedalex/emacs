@@ -398,6 +398,18 @@ Orderless enables sort of a fuzzy search for searching commands. So "comm magi" 
   :config
   (require 'smartparens-config))
 #+end_src
+** git
+*** magit
+#+begin_src emacs-lisp
+(use-package magit
+  :defer t
+  :commands (magit-status magit-diff-buffer-file))
+#+end_src
+*** diff-hl
+#+begin_src emacs-lisp
+(use-package diff-hl
+  :init (global-diff-hl-mode))
+#+end_src
 * Languages
 ** Org Mode
 #+begin_src emacs-lisp
