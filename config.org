@@ -33,6 +33,7 @@
   (global-display-line-numbers-mode 1)            ;; display line numbers
   (gc-cons-threshold 100000000 t)                 ;; increase performance
   (use-short-answers t)                           ;; y/n instead of yes/no
+  (global-auto-revert-mode t)                     ;; automatically reload files
 
   :bind
   ("C-+" . text-scale-increase)
