@@ -410,6 +410,9 @@ Orderless enables sort of a fuzzy search for searching commands. So "comm magi" 
 *** diff-hl
 #+begin_src emacs-lisp
 (use-package diff-hl
+  :hook ((dired-mode         . diff-hl-dired-mode-unless-remote)
+         (magit-pre-refresh  . diff-hl-magit-pre-refresh)
+         (magit-post-refresh . diff-hl-magit-post-refresh))
   :init (global-diff-hl-mode))
 #+end_src
 * Languages
