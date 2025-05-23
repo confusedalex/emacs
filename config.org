@@ -16,8 +16,8 @@
 * Some good defaults
 #+begin_src emacs-lisp
 (use-package emacs
-  :init 
-  (tool-bar-mode -1)           ;; Disable the tool bar 
+  :init
+  (tool-bar-mode -1)           ;; Disable the tool bar
   (menu-bar-mode -1)           ;; Disable the menu bar 
   (scroll-bar-mode -1)         ;; Disable the scroll bar
 
