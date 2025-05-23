@@ -46,14 +46,7 @@
 * Appearance
 First we gonne install some nice themes
 #+begin_src emacs-lisp
-(use-package doom-themes
-  :config
-  (load-theme 'doom-gruvbox t)
-
-  ;; Enable custom neotree theme (nerd-icons must be installed!)
-  ;; (doom-themes-neotree-config)
-  ;; Corrects (and improves) org-mode's native fontification.
-  (doom-themes-org-config))
+  (load-theme 'modus-vivendi t)
 #+end_src
 ** doom-modeline
 #+begin_src emacs-lisp
