@@ -373,7 +373,7 @@ Orderless enables sort of a fuzzy search for searching commands. So "comm magi" 
 (use-package lsp-ui
   :custom
   (lsp-ui-sideline-show-diagnostics t)
-  (lsp-ui-sideline-show-hover t)
+  (lsp-ui-sideline-show-hover nil)
   :commands lsp-ui-mode)
 #+end_src
 ** treesit
