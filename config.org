@@ -430,7 +430,7 @@ Orderless enables sort of a fuzzy search for searching commands. So "comm magi" 
    (org-mode . visual-line-mode))
   :custom
   (org-directory "~/persist/org/")
-  (org-agenda-files (append (list org-directory) (list "~/persist/org/memacs")))
+  (org-agenda-files (list org-directory))
   (org-ellipsis "⤵")
 
   (global-hi-lock-mode 1)
