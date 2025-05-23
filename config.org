@@ -399,6 +399,12 @@ Orderless enables sort of a fuzzy search for searching commands. So "comm magi" 
   :config
   (require 'smartparens-config))
 #+end_src
+** indent-bars
+#+begin_src emacs-lisp
+(use-package indent-bars
+  :defer t
+  :hook (prog-mode . indent-bars-mode))
+#+end_src
 ** git
 *** magit
 #+begin_src emacs-lisp
