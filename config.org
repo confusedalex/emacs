@@ -159,6 +159,12 @@ Orderless enables sort of a fuzzy search for searching commands. So "comm magi" 
   :config
   (dashboard-setup-startup-hook))
 #+end_src
+** olivetti
+#+begin_src emacs-lisp
+(use-package olivetti
+  :defer t
+  :commands (olivetti-mode))
+#+end_src
 * Editor
 ** Keybinds
 #+begin_src emacs-lisp
