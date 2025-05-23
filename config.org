@@ -732,15 +732,22 @@ Allow for expanding of src blocks automagically with "<s TAB " or "<el TAB" for 
   )
 #+end_src
 *** caldav
+I really want to use org-caldav but it always behaves weird and syncing get's out of state. I just want to add a tag to an heading and then it gets synced. Removing that heading should just delete it on the caldav side :(
+This really bugs me...
 #+begin_src emacs-lisp
-(use-package org-caldav
-  :custom
-  (org-caldav-url "https://cloud.mytbu.de/remote.php/dav/calendars/alex")
-  (org-caldav-calendar-id "org")
-  (org-caldav-inbox "~/persist/org/events.org")
-  (org-caldav-files nil)
-  (org-icalendar-timezone "Europe/Berlin")
-  )
+;; (use-package org-caldav
+;;   :vc (:url "https://github.com/confusedalex/org-caldav.git"
+;; 	    :rev :newest :branch "fix-tags"
+;; 	    )
+;;   :custom
+;;   (org-caldav-url "https://cloud.mytbu.de/remote.php/dav/calendars/alex")
+;;   (org-caldav-calendar-id "orgmode")
+;;   (org-caldav-inbox "~/persist/org/events.org")
+;;   (org-caldav-files '("~/persist/org/notes.org"))
+;;   (org-icalendar-timezone "Europe/Berlin")
+;;   (org-caldav-select-tags '("calendar"))
+;;   (org-caldav-save-directory "~/persist/org/")
+;;   )
 #+end_src
 *** tufte
 #+begin_src emacs-lisp
