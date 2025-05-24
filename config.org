@@ -457,6 +457,8 @@ Orderless enables sort of a fuzzy search for searching commands. So "comm magi" 
   (org-agenda-todo-ignore-scheduled 'future) ;; Don't show schedulded dates in the future
   (org-agenda-todo-ignore-deadlines 7) ;; Don't show deadlines that are more than 7 days away
 
+  (org-agenda-window-setup 'current-window)
+
   (org-return-follows-link t)
 
   (org-export-with-toc nil)
