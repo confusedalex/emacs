@@ -366,10 +366,11 @@ Orderless enables sort of a fuzzy search for searching commands. So "comm magi" 
   (lsp-keymap-prefix "C-c l")           ; Prefix for LSP actions
   (lsp-log-io nil)                    
   :hook (
-         (nix-ts-mode . lsp)
-	 (python-ts-mode . lsp)
+         (nix-ts-mode . lsp-deferred)
+		 (python-ts-mode . lsp-deferred)
+		 (dart-mode . lsp-deferred)
          (lsp-mode . lsp-enable-which-key-integration))
-  :commands lsp)
+  :commands lsp lsp-deferred)
 
 ;; optionally
 (use-package lsp-ui
@@ -790,7 +791,7 @@ This really bugs me...
 #+begin_src emacs-lisp
 (use-package web-mode
   :defer t
-  :hook (web-mode . lsp)
+  :hook (web-mode . lsp-deferred)
   :mode
   (("\\.phtml\\'" . web-mode)
    ("\\.php\\'" . web-mode)
