@@ -449,6 +449,7 @@ Orderless enables sort of a fuzzy search for searching commands. So "comm magi" 
       "KILL(k@)")) ; Task was cancelled, aborted, or is no longer applicable
    )
   (org-log-done 'time) ; Add timestamp when a task is closed
+  (org-log-into-drawer t) ;; Log changes into a drawer, so it wont clutter up my entry
 
   ;; Only show 3 days in the past, and 7 in the future
   (org-agenda-span 10)
