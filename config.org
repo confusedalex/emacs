@@ -378,6 +378,10 @@ Orderless enables sort of a fuzzy search for searching commands. So "comm magi" 
   (lsp-ui-sideline-show-diagnostics t)
   (lsp-ui-sideline-show-hover nil)
   :commands lsp-ui-mode)
+
+(use-package lsp-dart
+  :custom
+  (lsp-dart-flutter-widget-guides nil))
 #+end_src
 ** treesit
 #+begin_src emacs-lisp
