@@ -455,6 +455,8 @@ Orderless enables sort of a fuzzy search for searching commands. So "comm magi" 
   (org-log-done 'time) ; Add timestamp when a task is closed
   (org-log-into-drawer t) ;; Log changes into a drawer, so it wont clutter up my entry
 
+  (org-extend-today-until 3) ;; my day ends at 03:00, you have to love org mode for this
+
   ;; Only show 3 days in the past, and 7 in the future
   (org-agenda-span 10)
   (org-agenda-start-day "-3d")
