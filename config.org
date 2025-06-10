@@ -792,6 +792,11 @@ This really bugs me...
   ;; (flutter-sdk-path "/Applications/flutter/")
   )
 #+end_src
+** kdl-mode
+#+begin_src emacs-lisp
+(use-package kdl-mode
+  :mode ("\\.kdl\\'"))
+#+end_src
 * web-mode
 #+begin_src emacs-lisp
 (use-package web-mode
