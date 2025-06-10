@@ -29,11 +29,13 @@
   (inhibit-startup-message t)                     ;; Disable the startup message when Emacs launches.
   (tab-always-indent 'complete)                   ;; Make the TAB key complete text instead of just indenting.
   
-  (display-line-numbers-type 'relative)           ;; Use relative line numbering in programming modes.
+  (display-line-numbers-type 'visual)           ;; Use relative line numbering in programming modes.
   (global-display-line-numbers-mode 1)            ;; display line numbers
   (gc-cons-threshold 100000000 t)                 ;; increase performance
   (use-short-answers t)                           ;; y/n instead of yes/no
   (global-auto-revert-mode t)                     ;; automatically reload files
+
+  (tab-width 4)
 
   :bind
   ("C-+" . text-scale-increase)
