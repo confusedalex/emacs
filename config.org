@@ -364,7 +364,9 @@ Orderless enables sort of a fuzzy search for searching commands. So "comm magi" 
   :custom
   ;; (lsp-completion-provider :none)       ; Using Corfu as the provider
   (lsp-keymap-prefix "C-c l")           ; Prefix for LSP actions
-  (lsp-log-io nil)                    
+  (lsp-log-io nil)
+  (lsp-signature-render-documentation nil)
+  (lsp-eldoc-enable-hover nil)
   :hook (
          (nix-ts-mode . lsp-deferred)
 		 (python-ts-mode . lsp-deferred)
