@@ -459,15 +459,20 @@ Orderless enables sort of a fuzzy search for searching commands. So "comm magi" 
 
   (org-extend-today-until 3) ;; my day ends at 03:00, you have to love org mode for this
 
-  ;; Only show 3 days in the past, and 7 in the future
-  (org-agenda-span 10)
-  (org-agenda-start-day "-3d")
+  (org-agenda-start-day "-1d")
   (org-agenda-start-on-weekday nil) ; We don't need to start on a weekday, do we?
 
   (org-agenda-skip-schedulded-if-done t) ;; Don't show schedulded items, if done
   (org-agenda-skip-deadline-if-done t) ;; Don't show deadlined items, if done
   (org-agenda-todo-ignore-scheduled 'future) ;; Don't show schedulded dates in the future
   (org-agenda-todo-ignore-deadlines 7) ;; Don't show deadlines that are more than 7 days away
+
+  (org-agenda-time-grid
+   '((today require-timed remove-match)
+     (000 1200 1600 2400)
+     "  " "┈┈┈┈┈┈┈┈┈┈┈┈┈"))
+  (org-agenda-current-time-string "ᐊ┈┈┈┈┈┈┈┈ now")
+  (org-agenda-sort-notime-is-late nil) ;; Show timestamps with no time first
 
   (org-agenda-window-setup 'current-window)
 
@@ -604,7 +609,7 @@ Cliplink allows instantly capturing from the clipboard and fetching the URL titl
 			               :order 10)))))
 	  ((org-agenda-tag-filter '("-gifts"))))
 	 ("pw" "private week"
-	  ((agenda "" ((org-agenda-span 'week)))
+	  ((agenda "" ((org-agenda-span 14)))
 	   (todo "" ((org-agenda-overriding-header "")
                  (org-super-agenda-groups
                   (append common-todo-groups
