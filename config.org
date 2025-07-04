@@ -517,6 +517,21 @@ Orderless enables sort of a fuzzy search for searching commands. So "comm magi" 
 (use-package calfw)
 (use-package calfw-org)
 #+end_src
+*** clocking
+#+begin_src emacs-lisp
+(use-package org
+  :config
+  (org-clock-persistence-insinuate)
+  :custom
+  (org-clock-in-resume t)
+  (org-clock-into-drawer t)
+  (org-clock-out-remove-zero-time-clocks t)
+  (org-clock-out-when-done t)
+  (org-clock-persist t)
+  (org-clock-persist-query-resume nil)
+  (org-clock-report-include-clocking-task t)
+  )
+#+end_src
 *** org-cliplink
 Cliplink allows instantly capturing from the clipboard and fetching the URL title
 #+begin_src emacs-lisp
