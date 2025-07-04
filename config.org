@@ -35,6 +35,7 @@
   (use-short-answers t)                           ;; y/n instead of yes/no
   (global-auto-revert-mode t)                     ;; automatically reload files
 
+  (indent-tabs-mode nil)
   (tab-width 4)
 
   :bind
