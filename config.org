@@ -498,6 +498,7 @@ Orderless enables sort of a fuzzy search for searching commands. So "comm magi" 
      ("@home" . ?H)
      ("@work" . ?W)
      ("@uni" . ?U)
+     ("@school" . ?S)
 
      ;; Devices
      ("@computer" . ?C)
