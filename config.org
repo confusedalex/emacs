@@ -191,7 +191,7 @@ Orderless enables sort of a fuzzy search for searching commands. So "comm magi" 
   "e" 'org-export-dispatch
 
   ;; Files
-  "b" '(lambda() (interactive)(find-file "~/persist/org/books.org"))
+  "h" '(lambda() (interactive)(find-file "~/persist/org/hardware.org"))
   "j" '(lambda() (interactive)(find-file "~/persist/org/journal.org"))
   "n" '(lambda() (interactive)(find-file "~/persist/org/notes.org"))
   "w" '(lambda() (interactive)(find-file "~/persist/org/work.org"))
@@ -534,7 +534,7 @@ Cliplink allows instantly capturing from the clipboard and fetching the URL titl
         ("pn" "Personal notes" entry
          (file+headline "notes.org" "Inbox")
          "* %u %?\n%i" :prepend t)
-        ("B" "Book" entry (file "books.org")
+        ("B" "Book" entry (file+headline "hardware.org" "Bücher")
          "** TODO %^{ Title }
         :PROPERTIES:
         :name:     %\\1
