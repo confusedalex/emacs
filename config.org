@@ -458,9 +458,8 @@ Orderless enables sort of a fuzzy search for searching commands. So "comm magi" 
   (org-log-done 'time) ; Add timestamp when a task is closed
   (org-log-into-drawer t) ;; Log changes into a drawer, so it wont clutter up my entry
 
-  (org-extend-today-until 3) ;; my day ends at 03:00, you have to love org mode for this
+  (org-extend-today-until 4) ;; my day ends at 03:00, you have to love org mode for this
 
-  (org-agenda-start-day "-1d")
   (org-agenda-start-on-weekday nil) ; We don't need to start on a weekday, do we?
 
   (org-agenda-skip-schedulded-if-done t) ;; Don't show schedulded items, if done
@@ -609,21 +608,20 @@ Cliplink allows instantly capturing from the clipboard and fetching the URL titl
   (org-super-agenda-header-map nil)
   (org-super-agenda-mode t)
   (org-agenda-custom-commands
-   '(("d" "Today"
-	  ((agenda "" ((org-agenda-span 'day)
-				   (org-super-agenda-groups
-					'((:name "Today"
-							 :time-grid t
-							 :date today
-							 :todo "TODAY"
-							 :scheduled today
-							 :order 1))
-                    (:name "Started"
-			               :todo "STRT"
-			               :order 10)
-	                (:name "Waiting"
-			               :todo "WAIT"
-			               :order 10)))))
+   '(
+     ("d" "Today"
+	  ((agenda "" ((org-agenda-span 'day)))
+	   (todo "" ((org-agenda-overriding-header "")
+                 (org-super-agenda-groups
+                  (append common-todo-groups
+					      '((:name "Shopping"
+						           :tag "@shopping"
+						           :order 19)
+                            (:name "Reading"
+
+						           :todo "READING"
+						           :order 20)
+					        ))))))
 	  ((org-agenda-tag-filter '("-gifts"))))
 	 ("pw" "private week"
 	  ((agenda "" ((org-agenda-span 14)))
