@@ -49,7 +49,7 @@
 * Appearance
 First we gonne install some nice themes
 #+begin_src emacs-lisp
-(use-package ef-thems)
+(use-package ef-themes)
 (load-theme 'ef-bio t)
 #+end_src
 ** doom-modeline
