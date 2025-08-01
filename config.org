@@ -4,7 +4,6 @@
 * Basics
 #+begin_src emacs-lisp
 (require 'package)
-(package-initialize) ;; Load's lisp packages and activates them
 
 (require 'use-package-ensure) ;; Load use-package-always-ensure
 (setq use-package-always-ensure t) ;; Always ensures that a package is installed
@@ -423,6 +422,11 @@ Orderless enables sort of a fuzzy search for searching commands. So "comm magi" 
   :defer t
   :commands (magit-status magit-diff-buffer-file))
 #+end_src
+*** forge
+#+begin_src emacs-lisp
+(use-package forge
+  :after magit)
+#+end_src
 *** diff-hl
 #+begin_src emacs-lisp
 (use-package diff-hl
@@ -451,6 +455,7 @@ Orderless enables sort of a fuzzy search for searching commands. So "comm magi" 
       "STRT(s)"  ; A task that is in progress
       "WAIT(w@/!)"  ; Something external is holding up this task
       "IDEA(i)"  ; An unconfirmed and unapproved task or notion
+      "NEXT(n)"  ; Item that can be worked on right now
       "|"
       "DONE(d)"  ; Task successfully completed
       "KILL(k@)")) ; Task was cancelled, aborted, or is no longer applicable
@@ -462,9 +467,10 @@ Orderless enables sort of a fuzzy search for searching commands. So "comm magi" 
 
   (org-agenda-start-on-weekday nil) ; We don't need to start on a weekday, do we?
 
+  (org-agenda-tags-todo-honor-ignore-options t) ;; Don't show scheduled items which are already shown on the agenda
   (org-agenda-skip-schedulded-if-done t) ;; Don't show schedulded items, if done
   (org-agenda-skip-deadline-if-done t) ;; Don't show deadlined items, if done
-  (org-agenda-todo-ignore-scheduled 'future) ;; Don't show schedulded dates in the future
+  (org-agenda-todo-ignore-scheduled 'all) ;; Don't show schedulded dates in global TODO list
   (org-agenda-todo-ignore-deadlines 7) ;; Don't show deadlines that are more than 7 days away
 
   (org-agenda-time-grid
@@ -550,12 +556,12 @@ Cliplink allows instantly capturing from the clipboard and fetching the URL titl
          "* %u %?\n%i" :prepend t)
         ("B" "Book" entry (file+headline "hardware.org" "Bücher")
          "** TODO %^{ Title }
-        :PROPERTIES:
-        :name:     %\\1
-        :author:   %^{Author}
-        :pages:    %^{Pages}
-        :rating:   %^{Rating}
-        :END:\n%?"
+        %^{AUTHOR}p
+        %^{PAGES}p
+        %^{RATING}p
+        %^{CUSTOM_ID}p
+        %^{SERIAL_NUMBER}p
+"
          )
         ("i" "Item" entry (file "hardware.org")
          "* %^{Item name}
@@ -568,12 +574,14 @@ Cliplink allows instantly capturing from the clipboard and fetching the URL titl
             %^{LENDING}p
             %^{LEND_DATE}p 
          ")
-        ("L" "Log Entry" entry (file+olp+datetree "daybook.org") "* %? %T")
         ("j" "Journal entry" entry (file+datetree "journal.org") "* %(format-time-string \"%H:%M\") \n%?")
 	("b" "Bookmark" entry (file+headline "notes.org" "Bookmarks")
 	 "* %(org-cliplink-capture) \n:PROPERTIES:\n:CREATED: %U\n:END:\n")
         ("e" "Email capture" entry (file+headline "notes.org" "Inbox") "* TODO %a")
-	("a" "Appointment" entry (file+headline "notes.org" "Events") "* %? %^t"))
+	("a" "Appointment" entry (file+headline "notes.org" "Events") "* %? %^t")
+    ("w" "Weight" table-line ( id "e0957b0e-d05e-485d-ad0a-e769287a5fe6" ) " | %^u | %^{Gewicht} |" :prepend t)
+    
+    )
       )
 #+end_src
 *** super-agenda
@@ -603,7 +611,6 @@ Cliplink allows instantly capturing from the clipboard and fetching the URL titl
 	  (:name "Waiting"
 			 :todo "WAIT"
 			 :order 10)))
-
   :custom
   (org-super-agenda-header-map nil)
   (org-super-agenda-mode t)
@@ -618,11 +625,24 @@ Cliplink allows instantly capturing from the clipboard and fetching the URL titl
 						           :tag "@shopping"
 						           :order 19)
                             (:name "Reading"
+						           :todo "READING"
+						           :order 20)
+					        ))))))
+	  ((org-agenda-tag-filter-preset '("-gifts"))))
+     ("pd" "private day"
+	  ((agenda "" ((org-agenda-span 'day)))
+	   (todo "" ((org-agenda-overriding-header "")
+                 (org-super-agenda-groups
+                  (append common-todo-groups
+					      '((:name "Shopping"
+						           :tag "@shopping"
+						           :order 19)
+                            (:name "Reading"
 
 						           :todo "READING"
 						           :order 20)
 					        ))))))
-	  ((org-agenda-tag-filter '("-gifts"))))
+	  ((org-agenda-tag-filter-preset '("-@work" "-gifts"))))
 	 ("pw" "private week"
 	  ((agenda "" ((org-agenda-span 14)))
 	   (todo "" ((org-agenda-overriding-header "")
@@ -635,7 +655,7 @@ Cliplink allows instantly capturing from the clipboard and fetching the URL titl
 						           :tag "tech"
 						           :order 19)
 					        ))))))
-	  ((org-agenda-tag-filter '("-@work" "-gifts"))))
+	  ((org-agenda-tag-filter-preset '("-@work" "-gifts"))))
      ("w" "work"
 	  ((agenda "" ((org-agenda-files '("~/persist/org/work.org"))
 				   (org-agenda-span 'day)
@@ -796,6 +816,10 @@ This really bugs me...
         org-html-doctype "html5" ;; html5 page
         )
   )
+#+end_src
+*** gnuplot
+#+begin_src emacs-lisp
+(use-package gnuplot)
 #+end_src
 ** nix-ts
 #+begin_src emacs-lisp
