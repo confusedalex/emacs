@@ -127,8 +127,9 @@ Orderless enables sort of a fuzzy search for searching commands. So "comm magi" 
 ;; Optionally use the `orderless' completion style.
 (use-package orderless
   :custom
-  (completion-styles '(orderless basic))
-  (completion-category-overrides '((file (styles basic partial-completion)))))
+  (completion-styles '(orderless partial-completion basic))
+  (completion-category-defaults nil)
+  (completion-category-overrides nil))
 #+end_src
 *** Embark
 #+begin_src emacs-lisp
@@ -358,15 +359,22 @@ Orderless enables sort of a fuzzy search for searching commands. So "comm magi" 
 ** flycheck
 #+begin_src emacs-lisp
 (use-package flycheck
-  :init (global-flycheck-mode))
+  :ensure t
+  :init (global-flycheck-mode)
+  :bind (:map flycheck-mode-map
+              ("M-n" . flycheck-next-error)
+              ("M-p" . flycheck-previous-error)))
 #+end_src
 ** lsp-mode
 #+begin_src emacs-lisp
 (use-package lsp-mode
   :init
   (setq lsp-use-plists t)
+  (defun my/lsp-mode-setup-completion ()
+    (setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))
+          '(orderless))) ;; Configure orderless
   :custom
-  ;; (lsp-completion-provider :none)       ; Using Corfu as the provider
+  (lsp-completion-provider :none)       ; Using Corfu as the provider
   (lsp-keymap-prefix "C-c l")           ; Prefix for LSP actions
   (lsp-log-io nil)
   (lsp-signature-render-documentation nil)
@@ -375,8 +383,11 @@ Orderless enables sort of a fuzzy search for searching commands. So "comm magi" 
          (nix-ts-mode . lsp-deferred)
 		 (python-ts-mode . lsp-deferred)
 		 (dart-mode . lsp-deferred)
-         (lsp-mode . lsp-enable-which-key-integration))
-  :commands lsp lsp-deferred)
+		 (typescript-ts-mode . lsp-deferred)
+		 (tsx-ts-mode . lsp-deferred)
+         (lsp-mode . lsp-enable-which-key-integration)
+         (lsp-completion-mode . my/lsp-mode-setup-completion))
+:commands lsp lsp-deferred)
 
 ;; optionally
 (use-package lsp-ui
@@ -411,12 +422,6 @@ Orderless enables sort of a fuzzy search for searching commands. So "comm magi" 
   :hook (prog-mode text-mode markdown-mode) ;; add `smartparens-mode` to these hooks
   :config
   (require 'smartparens-config))
-#+end_src
-** indent-bars
-#+begin_src emacs-lisp
-(use-package indent-bars
-  :defer t
-  :hook (prog-mode . indent-bars-mode))
 #+end_src
 ** git
 *** magit
