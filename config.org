@@ -400,6 +400,12 @@ Orderless enables sort of a fuzzy search for searching commands. So "comm magi" 
   :custom
   (lsp-dart-flutter-widget-guides nil))
 #+end_src
+*** eslint
+#+begin_src emacs-lisp
+(use-package lsp-eslint
+  :ensure nil
+  :after lsp-mode)
+#+end_src
 ** treesit
 #+begin_src emacs-lisp
 (use-package treesit-auto
