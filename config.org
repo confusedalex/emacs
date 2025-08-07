@@ -430,11 +430,6 @@ Orderless enables sort of a fuzzy search for searching commands. So "comm magi" 
   :defer t
   :commands (magit-status magit-diff-buffer-file))
 #+end_src
-*** forge
-#+begin_src emacs-lisp
-(use-package forge
-  :after magit)
-#+end_src
 *** diff-hl
 #+begin_src emacs-lisp
 (use-package diff-hl
@@ -812,20 +807,6 @@ This really bugs me...
 ;;   (org-caldav-select-tags '("calendar"))
 ;;   (org-caldav-save-directory "~/persist/org/")
 ;;   )
-#+end_src
-*** tufte
-#+begin_src emacs-lisp
-(use-package org-tufte
-  :vc (:url "https://github.com/Zilong-Li/org-tufte.git"
-	    :rev :newest)
-  :config
-  (setq org-tufte-htmlize-code t  ;; htmlize and beautify source code!
-        org-tufte-embed-images nil ;; do not embed images. faster!
-        org-tufte-goto-top-button t ;; add go-to-top button in html
-        org-html-html5-fancy t  ;; enable html5 elements
-        org-html-doctype "html5" ;; html5 page
-        )
-  )
 #+end_src
 *** gnuplot
 #+begin_src emacs-lisp
