@@ -45,6 +45,13 @@
   ("<C-wheel-down>" . text-scale-decrease)
   )
 #+end_src
+** Remove confusing warnings
+#+begin_src emacs-lisp
+(add-to-list 'display-buffer-alist
+             '("\\`\\*\\(Warnings\\|Compile-Log\\)\\*\\'"
+               (display-buffer-no-window)
+               (allow-no-window . t)))
+#+end_src
 * Appearance
 #+begin_src emacs-lisp
 (set-face-attribute 'default nil :family "JetBrainsMono Nerd Font" :height 110)
